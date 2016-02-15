@@ -30,6 +30,17 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>1.3.2.RELEASE</version>
         </dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-core</artifactId>
+			<version>1.1.4.RELEASE</version>
+		</dependency>
+
+        <dependency>
+            <groupId>com.julienvey.trello</groupId>
+            <artifactId>trello-java-wrapper</artifactId>
+            <version>0.3</version>
+        </dependency>
 	</dependencies>
 	<parent>
 		<groupId>com.danigcaff.springframework.samples</groupId>
