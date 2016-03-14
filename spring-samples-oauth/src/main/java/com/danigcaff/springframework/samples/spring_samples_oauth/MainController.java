@@ -54,7 +54,7 @@ public class MainController
     	DBObject doc = (DBObject) (JSON.parse(json.toString()));
     	if (!database.collectionExists(TYPE)){
     		DBObject options = BasicDBObjectBuilder.start().add("capped", false).get();
-    		database.createCollection((String)json.get(TYPE),options);
+    		database.createCollection((String)json.get(TYPE),options);        
     		}
     	coll=database.getCollection((String)json.get(TYPE)); 
         coll.insert(doc);
