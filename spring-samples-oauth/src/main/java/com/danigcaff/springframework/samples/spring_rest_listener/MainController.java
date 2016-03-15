@@ -23,6 +23,8 @@ public class MainController {
 	private DB database;
 	private Mongo client;
 	private static String TYPE = "event_type";
+	private static String PUSH_TYPE = "pushER";
+	private static String MEMBER_TYPE = "member";
 
 	@RequestMapping("/")
 	@ResponseBody
@@ -41,10 +43,10 @@ public class MainController {
 	}
 
 	public JSONObject eventClasification(JSONObject json) {
-		if (json.has("pusher"))
-			json.put(TYPE, "push");
-		else if (json.has("member"))
-			json.put(TYPE, "member");
+		if (json.has(PUSH_TYPE))
+			json.put(TYPE, PUSH_TYPE);
+		else if (json.has(MEMBER_TYPE))
+			json.put(TYPE, MEMBER_TYPE);
 		return json;
 	}
 
