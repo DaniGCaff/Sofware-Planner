@@ -75,7 +75,7 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 
 	@RequestMapping({ "/user", "/me" })
 	public Map<String, String> user(Principal principal) {
-		Map<String, String> map = new LinkedHashMap<>();
+		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("name", principal.getName());
 		return map;
 	}
@@ -136,7 +136,7 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 
 	private Filter ssoFilter() {
 		CompositeFilter filter = new CompositeFilter();
-		List<Filter> filters = new ArrayList<>();
+		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(ssoFilter(facebook(), "/login/facebook"));
 		filters.add(ssoFilter(github(), "/login/github"));
 		filter.setFilters(filters);

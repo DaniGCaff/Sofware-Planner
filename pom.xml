@@ -9,8 +9,8 @@
 	<version>0.0.1.SNAPSHOT</version>
 
 	<modules>
-		<module>spring-samples-oauth</module>
-		<module>social-github</module>
+		<module>spring-rest-listener</module>
+		<module>spring-mvc</module>
 	</modules>
 
 	<properties>
