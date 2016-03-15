@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_samples_oauth;
+package com.danigcaff.springframework.samples.spring_rest_listener;
 import org.json.JSONObject;	
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_samples_oauth;
+package com.danigcaff.springframework.samples.spring_rest_listener;
 
 import java.util.Arrays;
 
