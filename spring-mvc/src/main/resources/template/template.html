@@ -1,0 +1,26 @@
+<html>
+<head>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title><tiles:insertAttribute name="title" ignore="true" /></title>
+<meta name="description" content="<tiles:insertAttribute name='page_description' ignore='true' />">
+<meta name="viewport" content="width=device-width" />
+<base href="/" />
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<div id="row">
+		<tiles:insertAttribute name="header" />
+	</div>
+	<div id="row">
+		<tiles:insertAttribute name="content" />
+	</div>
+	<div id="row">
+		<tiles:insertAttribute name="footer" />
+	</div>
+</body>
+</html>
