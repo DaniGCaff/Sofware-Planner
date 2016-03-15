@@ -63,7 +63,7 @@ import org.springframework.web.filter.CompositeFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
-
+@SpringBootApplication
 @RestController
 @EnableOAuth2Client
 @EnableAuthorizationServer
@@ -73,6 +73,10 @@ public class LoginController extends WebSecurityConfigurerAdapter {
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
 
+	public static void main(String[] args) {
+		SpringApplication.run(LoginController.class, args);
+	}
+	
 	@RequestMapping({ "/user", "/me" })
 	public Map<String, String> user(Principal principal) {
 		Map<String, String> map = new LinkedHashMap<String, String>();
@@ -179,4 +183,17 @@ public class LoginController extends WebSecurityConfigurerAdapter {
 		return repository;
 	}
 
+}
+
+class ClientResources {
+	private OAuth2ProtectedResourceDetails client = new AuthorizationCodeResourceDetails();
+	private ResourceServerProperties resource = new ResourceServerProperties();
+
+	public OAuth2ProtectedResourceDetails getClient() {
+		return client;
+	}
+
+	public ResourceServerProperties getResource() {
+		return resource;
+	}
 }
