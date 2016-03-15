@@ -15,6 +15,7 @@
  */
 package com.danigcaff.springframework.samples.spring_mvc;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.Mac;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -61,6 +63,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.CompositeFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 
 @SpringBootApplication
@@ -83,6 +86,14 @@ public class LoginController extends WebSecurityConfigurerAdapter {
 		map.put("name", principal.getName());
 		return map;
 	}
+	
+//	@RequestMapping({ "/" })
+//	public ModelAndView index() {
+//		ModelAndView mav = new ModelAndView();
+//		mav.addObject("name", "");
+//		mav.setViewName("index.html");
+//		return mav;
+//	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
