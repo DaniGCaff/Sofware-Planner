@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tiles-definitions>
-	<definition name="startPage_def" extends="defaultTemplate">
+	<definition name="defaultTemplate" template="template.html">
+        <put-attribute name="header" value="defaultHeader.html" />
+        <put-attribute name="footer" value="defaultFooter.html" />
+    </definition>
+	<definition name="startPage_def" extends=defaultTemplate"">
 		<put-attribute name="title" value="ADE :: UPM " />
 		<put-attribute name="page_description" value="Alguna descripcion" />
-		<put-attribute name="content" value="/WEB-INF/jsp/start/start_page.jsp" />
+		<put-attribute name="content" value="../static/index.html" />
 	</definition>
 </tiles-definitions>

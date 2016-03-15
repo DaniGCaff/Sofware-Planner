@@ -63,12 +63,12 @@ import org.springframework.web.filter.CompositeFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
-@SpringBootApplication
+
 @RestController
 @EnableOAuth2Client
 @EnableAuthorizationServer
 @Order(6)
-public class SocialApplication extends WebSecurityConfigurerAdapter {
+public class LoginController extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
@@ -107,10 +107,6 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 				.authorizeRequests().anyRequest().authenticated();
 			// @formatter:on
 		}
-	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(SocialApplication.class, args);
 	}
 
 	@Bean
@@ -183,17 +179,4 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		return repository;
 	}
 
-}
-
-class ClientResources {
-	private OAuth2ProtectedResourceDetails client = new AuthorizationCodeResourceDetails();
-	private ResourceServerProperties resource = new ResourceServerProperties();
-
-	public OAuth2ProtectedResourceDetails getClient() {
-		return client;
-	}
-
-	public ResourceServerProperties getResource() {
-		return resource;
-	}
 }
