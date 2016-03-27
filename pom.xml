@@ -11,6 +11,7 @@
 	<modules>
 		<module>spring-rest-listener</module>
 		<module>spring-mvc</module>
+		<module>spring-web</module>
 	</modules>
 
 	<properties>
