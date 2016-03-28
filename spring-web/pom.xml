@@ -27,12 +27,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		
-		
-		
-		
-		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -69,7 +63,8 @@
 			<artifactId>webjars-locator</artifactId>
 		</dependency>
 	</dependencies>
-
+	
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -77,5 +72,26 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-install-plugin</artifactId>
+			<version>2.4</version>
+			<executions>
+				<execution>
+					<phase>initialize</phase>
+					<goals>
+						<goal>install-file</goal>
+					</goals>
+					<configuration>
+						<groupId>org.springframework.social</groupId>
+						<artifactId>spring-social-github</artifactId>
+						<version>1.0.0.BUILD-SNAPSHOT</version>
+						<packaging>jar</packaging>
+						<file>${basedir}/lib/spring-social-github-1.0.0.BUILD-SNAPSHOT.jar</file>
+					</configuration>
+				</execution>
+			</executions>
+			
+			</plugin>
 	</build>
 </project>
