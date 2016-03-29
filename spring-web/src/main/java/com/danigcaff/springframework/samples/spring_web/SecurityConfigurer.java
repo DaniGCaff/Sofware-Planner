@@ -100,7 +100,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		// @formatter:off	
 		http.antMatcher("/**")
 			.authorizeRequests()
-				.antMatchers("/", "/login**", "/repos**", "/webjars/**").permitAll()
+				.antMatchers("/", "/login**", "/repos", "/webjars/**").permitAll()
 				.anyRequest().authenticated()
 			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
 			.and().logout().logoutSuccessUrl("/").permitAll()
