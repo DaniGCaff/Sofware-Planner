@@ -1,6 +1,9 @@
 package com.danigcaff.springframework.samples.spring_web;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -37,16 +40,20 @@ public class ReposController implements BeanFactoryAware {
 	OAuth2ClientContext oauth2ClientContext;
 	
 	@RequestMapping("/repos")
-	public String listView(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
+	public List<Map<String,String>> listView() {
 		
 		GitHub gitHub = new GitHubConnectionFactory(clientId, clientSecret)
 		.createConnection(new AccessGrant(oauth2ClientContext.getAccessToken().getValue()))
 		.getApi();
 		
-		//GitHub gitHub = (GitHub)beanFactory.getBean("GITHUB_API");
 		List<GitHubRepo> listaRepos = gitHub.userOperations().getRepositories();
-		model.addAttribute("name", listaRepos.size());
-		return "repos_list";
+		List<Map<String, String>> listaIdNombre = new ArrayList<Map<String,String>>();
+		for(int i=0;i<listaRepos.size();i++){
+			Map<String, String> map = new LinkedHashMap<String,String>();
+			map.put("id", Long.toString(listaRepos.get(i).getId()));
+			map.put("name", listaRepos.get(i).getName());			
+		}	
+		return listaIdNombre;
     }
 
 	public void setBeanFactory(BeanFactory arg0) throws BeansException {
