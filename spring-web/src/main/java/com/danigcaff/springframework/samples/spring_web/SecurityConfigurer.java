@@ -86,21 +86,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
 
-	/*@Bean
-	  public static PropertySourcesPlaceholderConfigurer properties() {
-	      PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-	      YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
-	      yaml.setResources(new ClassPathResource("application.yml"));
-	      propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
-	      return propertySourcesPlaceholderConfigurer;
-	  }*/
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off	
 		http.antMatcher("/**")
 			.authorizeRequests()
-				.antMatchers("/", "/login**", "/repos", "/webjars/**").permitAll()
+				.antMatchers("/", "/login**", "/webjars/**").permitAll()
 				.anyRequest().authenticated()
 			.and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
 			.and().logout().logoutSuccessUrl("/").permitAll()
@@ -139,16 +130,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		return new ClientResources();
 	}
 
-	@Bean
-	@ConfigurationProperties("facebook")
-	ClientResources facebook() {
-		return new ClientResources();
-	}
-
 	private Filter ssoFilter() {
 		CompositeFilter filter = new CompositeFilter();
 		List<Filter> filters = new ArrayList<Filter>();
-		filters.add(ssoFilter(facebook(), "/login/facebook"));
 		filters.add(ssoFilter(github(), "/login/github"));
 		filter.setFilters(filters);
 		return filter;

@@ -1,20 +1,95 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<!--Import materialize.css-->
+<link type="text/css" rel="stylesheet"
+	href="/webjars/materializecss/css/materialize.min.css"
+	media="screen,projection" />
+</head>
 <body ng-app="app" ng-controller="home as home">
-	<h1>Login</h1>
-	<div class="container" ng-show="!home.authenticated">
-		<div>
-			<a href="/login/github">Iniciar sesión</a>
+
+	<nav>
+		<div class="nav-wrapper">
+			<a href="#" class="brand-logo"><i class="large material-icons">insert_chart</i></a>
+			<a href="#" class="brand-logo center">Software Planner</a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<li><a href="/">Inicio</a></li>
+				<li ng-show="home.authenticated"><a href="/">Ajustes</a></li>
+				<li ng-show="home.authenticated"><button
+						ng-click="home.logout()" class="btn btn-primary">
+						Logout (<span ng-bind="home.user"></span>)
+					</button></li>
+			</ul>
 		</div>
-	</div>
-	<div class="container" ng-show="home.authenticated">
-		Logged in as: <span ng-bind="home.user"></span>
-		<div>
-			<button ng-click="home.logout()" class="btn btn-primary">Logout</button>
+	</nav>
+
+	<div class="container" ng-show="!home.authenticated">
+
+		<div style="height: 50%;" class="valign-wrapper  center-align">
+			<span class="valign center-block"><a class="valign"
+				href="/login/github"><button class="btn btn-primary">Iniciar sesión</button></a></span>
 		</div>
 
-		Tus repositorios:
-		<div ng-repeat="(indice, repo) in home.repos">{{repo.id}}:
-			{{repo.name}}</div>
+
+		<div class="row">
+			<div class="col s4">
+				<div class="center promo promo-example">
+					<i class="large material-icons">flash_on</i>
+					<p class="promo-caption">Speeds up development</p>
+					<p class="light center">We did most of the heavy lifting for
+						you to provide a default stylings that incorporate our custom
+						components.</p>
+				</div>
+			</div>
+			<div class="col s4">
+				<div class="center promo promo-example">
+					<i class="large material-icons">group</i>
+					<p class="promo-caption">User Experience Focused</p>
+					<p class="light center">By utilizing elements and principles of
+						Material Design, we were able to create a framework that focuses
+						on User Experience.</p>
+				</div>
+			</div>
+			<div class="col s4">
+				<div class="center promo promo-example">
+					<i class="large material-icons">settings</i>
+					<p class="promo-caption">Easy to work with</p>
+					<p class="light center">We have provided detailed documentation
+						as well as specific code examples to help new users get started.</p>
+				</div>
+			</div>
+		</div>
+
 	</div>
+	<div class="container" ng-show="home.authenticated">
+
+		<section>
+			<h2>Tus repositorios</h2>
+			<ul class="collection" ng-show="home.repos">
+				<li ng-repeat="(indice, repo) in home.repos"><a
+					class="collection-item"><i class="tiny material-icons">work</i>
+						{{repo.name}}</a></li>
+			</ul>
+			
+			<div class="center" ng-show="!home.repos">
+		    <div class="preloader-wrapper big active" >
+		      <div class="spinner-layer spinner-blue">
+		        <div class="circle-clipper left">
+		          <div class="circle"></div>
+		        </div><div class="gap-patch">
+		          <div class="circle"></div>
+		        </div><div class="circle-clipper right">
+		          <div class="circle"></div>
+		        </div>
+		      </div>
+		      </div>
+        
+		</section>
+	</div>
+	<script type="text/javascript"
+		src="/webjars/materializecss/materialize.min.js"></script>
 	<script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
 	<script type="text/javascript">
 		angular
@@ -54,3 +129,4 @@
 				});
 	</script>
 </body>
+</html>
