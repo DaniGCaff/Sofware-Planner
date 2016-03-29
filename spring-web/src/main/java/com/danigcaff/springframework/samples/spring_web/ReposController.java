@@ -23,8 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @EnableOAuth2Client
 @Order(7)
 public class ReposController implements BeanFactoryAware {
@@ -51,7 +52,8 @@ public class ReposController implements BeanFactoryAware {
 		for(int i=0;i<listaRepos.size();i++){
 			Map<String, String> map = new LinkedHashMap<String,String>();
 			map.put("id", Long.toString(listaRepos.get(i).getId()));
-			map.put("name", listaRepos.get(i).getName());			
+			map.put("name", listaRepos.get(i).getName());
+			listaIdNombre.add(map);
 		}	
 		return listaIdNombre;
     }
