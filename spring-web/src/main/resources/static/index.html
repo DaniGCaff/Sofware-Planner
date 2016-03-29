@@ -10,8 +10,10 @@
 		<div>
 			<button ng-click="home.logout()" class="btn btn-primary">Logout</button>
 		</div>
-		
+
 		Tus repositorios:
+		<div ng-repeat="(indice, repo) in home.repos">{{repo.id}}:
+			{{repo.name}}</div>
 	</div>
 	<script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
 	<script type="text/javascript">
@@ -26,6 +28,12 @@
 						if (data.name) {
 							self.user = data.name;
 							self.authenticated = true;
+							$http.get("/repos").success(function(dato) {
+								self.repos = dato;
+							}).error(function() {
+								self.repos = null;
+							});
+
 						} else {
 							self.user = "N/A";
 							self.authenticated = false;
