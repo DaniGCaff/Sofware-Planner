@@ -18,6 +18,18 @@
 	</properties>
 	<dependencies>
 		<dependency>
+	        <groupId>org.springframework.social</groupId>
+	        <artifactId>spring-social-core</artifactId>
+	        <version>1.1.4.RELEASE</version>
+	    </dependency>
+	
+		<dependency>
+			<groupId>com.danigcaff.springframework.social</groupId>
+			<artifactId>social-github</artifactId>
+			<version>1.0.0.BUILD-SNAPSHOT</version>
+		</dependency>
+	
+		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
@@ -58,13 +70,25 @@
 			<artifactId>bootstrap</artifactId>
 			<version>3.2.0</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>webjars-locator</artifactId>
 		</dependency>
+		
+
+	    
+
+
 	</dependencies>
 	
-	
+    <repositories>
+	    <repository>
+	        <id>local-maven-repo</id>
+	        <url>file://C:\Users\user\Desktop\workspace_ad\spring-samples\local-maven-repo</url>
+	    </repository>
+	</repositories>
+		
 	<build>
 		<plugins>
 			<plugin>
@@ -72,26 +96,5 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-install-plugin</artifactId>
-			<version>2.4</version>
-			<executions>
-				<execution>
-					<phase>initialize</phase>
-					<goals>
-						<goal>install-file</goal>
-					</goals>
-					<configuration>
-						<groupId>org.springframework.social</groupId>
-						<artifactId>spring-social-github</artifactId>
-						<version>1.0.0.BUILD-SNAPSHOT</version>
-						<packaging>jar</packaging>
-						<file>${basedir}/lib/spring-social-github-1.0.0.BUILD-SNAPSHOT.jar</file>
-					</configuration>
-				</execution>
-			</executions>
-			
-			</plugin>
 	</build>
 </project>

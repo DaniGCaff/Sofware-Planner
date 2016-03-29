@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.danigcaff.springframework.social</groupId>
+  <artifactId>social-github</artifactId>
+  <versioning>
+    <versions>
+      <version>1.0.0.BUILD-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20160328222557</lastUpdated>
+  </versioning>
+</metadata>

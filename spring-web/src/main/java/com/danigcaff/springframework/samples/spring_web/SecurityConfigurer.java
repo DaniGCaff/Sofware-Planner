@@ -64,6 +64,9 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.social.github.api.GitHub;
+import org.springframework.social.github.connect.GitHubServiceProvider;
+import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.CompositeFilter;
@@ -78,26 +81,19 @@ import org.springframework.web.util.WebUtils;
 @EnableAutoConfiguration
 @ComponentScan
 @Order(6)
-public class LoginController extends WebSecurityConfigurerAdapter {
+public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
-	
-	@Bean
+
+	/*@Bean
 	  public static PropertySourcesPlaceholderConfigurer properties() {
 	      PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
 	      YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
 	      yaml.setResources(new ClassPathResource("application.yml"));
 	      propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
 	      return propertySourcesPlaceholderConfigurer;
-	  }
-	
-	@RequestMapping({ "/user", "/me" })
-	public Map<String, String> user(Principal principal) {
-		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put("name", principal.getName());
-		return map;
-	}
+	  }*/
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -163,6 +159,7 @@ public class LoginController extends WebSecurityConfigurerAdapter {
 				path);
 		OAuth2RestTemplate facebookTemplate = new OAuth2RestTemplate(client.getClient(),
 				oauth2ClientContext);
+		
 		facebookFilter.setRestTemplate(facebookTemplate);
 		facebookFilter.setTokenServices(new UserInfoTokenServices(
 				client.getResource().getUserInfoUri(), client.getClient().getClientId()));
