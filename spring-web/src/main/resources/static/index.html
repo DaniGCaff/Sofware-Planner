@@ -64,13 +64,35 @@
 
 	</div>
 	<div class="container" ng-show="home.authenticated">
-
+		
+  
+  <!-- Modal Structure -->
+  <div id="modalAsociar" class="modal bottom-sheet">
+   <form action="/repos/asociar" method="post" > 
+    <div class="modal-content">
+      <h4>Modal Header</h4>
+   <input name="id_repo" type="hidden" id="id_repo"/>
+    <p>
+      <input name="tipoAsoc" type="radio" id="test1" value="trello"/>
+      <label for="test1">Trello</label>
+    </p>
+    <p>
+      <input name="tipoAsoc" type="radio" id="test2" value="google_calendar"/>
+      <label for="test2">Google Calendar</label>
+    </p>
+</div>
+    <div class="modal-footer">
+      <button href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Enviar</button>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+    </div>
+   </form>
+  </div>
 		<section>
 			<h2>Tus repositorios</h2>
 			<ul class="collection" ng-show="home.repos">
-				<li ng-repeat="(indice, repo) in home.repos"><a
-					class="collection-item"><i class="tiny material-icons">work</i>
-						{{repo.name}}</a></li>
+				<li class="collection-item" ng-repeat="(indice, repo) in home.repos"><a
+					><i class="tiny material-icons">work</i>
+						{{repo.name}}</a><a onclick="asociarRepo()"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a></li>
 			</ul>
 			
 			<div class="center" ng-show="!home.repos">
@@ -88,8 +110,8 @@
         
 		</section>
 	</div>
-	<script type="text/javascript"
-		src="/webjars/materializecss/materialize.min.js"></script>
+	<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+	<script type="text/javascript"src="/webjars/materializecss/materialize.min.js"></script>
 	<script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
 	<script type="text/javascript">
 		angular
@@ -127,6 +149,10 @@
 						});
 					};
 				});
+		function asociarRepo(id){
+			  $('#id_repo').val(id);
+			  $('#modalAsociar').openModal();
+		}
 	</script>
 </body>
 </html>

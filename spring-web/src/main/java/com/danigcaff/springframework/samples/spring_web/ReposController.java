@@ -1,6 +1,7 @@
 package com.danigcaff.springframework.samples.spring_web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.social.github.api.GitHub;
+import org.springframework.social.github.api.GitHubHook;
 import org.springframework.social.github.api.GitHubRepo;
 import org.springframework.social.github.connect.GitHubConnectionFactory;
 import org.springframework.social.github.connect.GitHubServiceProvider;
@@ -21,6 +23,7 @@ import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,11 +56,24 @@ public class ReposController implements BeanFactoryAware {
 			Map<String, String> map = new LinkedHashMap<String,String>();
 			map.put("id", Long.toString(listaRepos.get(i).getId()));
 			map.put("name", listaRepos.get(i).getName());
+			map.put("asoc", "false");
+
 			listaIdNombre.add(map);
 		}	
 		return listaIdNombre;
     }
-
+	
+	@RequestMapping("/repos/asociar/{id}")
+	public Map <String, String> asociate(@PathVariable("id") int id){
+		GitHub gitHub = new GitHubConnectionFactory(clientId, clientSecret)
+		.createConnection(new AccessGrant(oauth2ClientContext.getAccessToken().getValue()))
+		.getApi();
+		GitHubHook gitHubHook = new GitHubHook(1, "http://ca253fd2.ngrok.io", "push", new Date(), new Date());
+		gitHub.repoOperations().getHooks(gitHub.userOperations().getUserProfile().getName(), Integer.toString(id)).add(gitHubHook);
+		Map<String,String> map =new LinkedHashMap<String, String>();
+		map.put("response", "ok");
+		return map;
+	}
 	public void setBeanFactory(BeanFactory arg0) throws BeansException {
 		this.beanFactory = arg0;
 	}
