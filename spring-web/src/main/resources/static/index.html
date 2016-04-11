@@ -68,7 +68,6 @@
   
   <!-- Modal Structure -->
   <div id="modalAsociar" class="modal bottom-sheet">
-   <form action="/repos/asociar" method="post" > 
     <div class="modal-content">
       <h4>Modal Header</h4>
    <input name="id_repo" type="hidden" id="id_repo"/>
@@ -82,17 +81,16 @@
     </p>
 </div>
     <div class="modal-footer">
-      <button href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Enviar</button>
+      <a id = "asociar-send" ng-click="home.requestAsoc()" class=" modal-action modal-close waves-effect waves-green btn-flat">Enviar</a>
       <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
     </div>
-   </form>
   </div>
 		<section>
 			<h2>Tus repositorios</h2>
 			<ul class="collection" ng-show="home.repos">
 				<li class="collection-item" ng-repeat="(indice, repo) in home.repos"><a
 					><i class="tiny material-icons">work</i>
-						{{repo.name}}</a><a onclick="asociarRepo()"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a></li>
+						{{repo.name}}</a><a ng-click="home.asociarRepo(repo.name)"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a></li>
 			</ul>
 			
 			<div class="center" ng-show="!home.repos">
@@ -148,11 +146,21 @@
 							self.authenticated = false;
 						});
 					};
+					
+					var requestAsocName;
+					self.asociarRepo = function(id){
+						  requestAsocName=id;
+						  $('#modalAsociar').openModal();
+					}
+					
+					self.requestAsoc = function() {
+						$http.get("/repos/asociar/" + self.user + "/" + requestAsocName).success(function(dato) {
+							alert(dato);
+						}).error(function() {
+							alert("ERROR");
+						});
+					}
 				});
-		function asociarRepo(id){
-			  $('#id_repo').val(id);
-			  $('#modalAsociar').openModal();
-		}
 	</script>
 </body>
 </html>

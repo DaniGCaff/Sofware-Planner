@@ -63,13 +63,13 @@ public class ReposController implements BeanFactoryAware {
 		return listaIdNombre;
     }
 	
-	@RequestMapping("/repos/asociar/{id}")
-	public Map <String, String> asociate(@PathVariable("id") int id){
+	@RequestMapping("/repos/asociar/{username}/{repo}")
+	public Map <String, String> asociate(@PathVariable("repo") String repo, @PathVariable ("username") String username){
 		GitHub gitHub = new GitHubConnectionFactory(clientId, clientSecret)
 		.createConnection(new AccessGrant(oauth2ClientContext.getAccessToken().getValue()))
 		.getApi();
-		GitHubHook gitHubHook = new GitHubHook(1, "http://ca253fd2.ngrok.io", "push", new Date(), new Date());
-		gitHub.repoOperations().getHooks(gitHub.userOperations().getUserProfile().getName(), Integer.toString(id)).add(gitHubHook);
+		GitHubHook gitHubHook = new GitHubHook(1, "SoftwarePlanner", "http://ca253fd2.ngrok.io", new Date(), new Date());
+		gitHub.repoOperations().getCommits(username, repo);
 		Map<String,String> map =new LinkedHashMap<String, String>();
 		map.put("response", "ok");
 		return map;
