@@ -65,12 +65,9 @@ public class ReposController implements BeanFactoryAware {
 	
 	@RequestMapping("/repos/asociar/{id}")
 	public Map <String, String> asociate(@PathVariable("id") int id){
-		GitHub gitHub = new GitHubConnectionFactory(clientId, clientSecret)
-		.createConnection(new AccessGrant(oauth2ClientContext.getAccessToken().getValue()))
-		.getApi();
-		GitHubHook gitHubHook = new GitHubHook(1, "http://ca253fd2.ngrok.io", "push", new Date(), new Date());
-		gitHub.repoOperations().getHooks(gitHub.userOperations().getUserProfile().getName(), Integer.toString(id)).add(gitHubHook);
-		Map<String,String> map =new LinkedHashMap<String, String>();
+		//TODO Hacer gestion en base de datos. Añadir el repositorio a una coleccion
+		// de repositorios "autorizados". Hay que añadir el url del repositorio.
+		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("response", "ok");
 		return map;
 	}

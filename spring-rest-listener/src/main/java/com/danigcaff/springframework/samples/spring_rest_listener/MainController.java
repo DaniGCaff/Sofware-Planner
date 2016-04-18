@@ -23,7 +23,7 @@ public class MainController {
 	private DB database;
 	private Mongo client;
 	private static String TYPE = "event_type";
-	private static String PUSH_TYPE = "pushER";
+	private static String PUSH_TYPE = "pusher";
 	private static String MEMBER_TYPE = "member";
 
 	@RequestMapping("/")
@@ -53,6 +53,7 @@ public class MainController {
 	@RequestMapping(value = "/event", method = RequestMethod.POST)
 	@ResponseBody
 	public String eventListener(@RequestBody String evento) {
+		//TODO. Comprobar que la url del repositorio existe en la colección de autorizados.
 		System.out.println(evento);
 		mongoDBConnection();
 		JSONObject json = new JSONObject(evento);
@@ -64,6 +65,10 @@ public class MainController {
 			database.createCollection((String) json.get(TYPE), options);
 		}
 		coll = database.getCollection((String) json.get(TYPE));
+		//TODO Parsear el comentario del commit. 
+		//TODO Hay que tratar commit por commit, y añadir la tarea a un array dentro del objeto repositorio
+		// en la coleccion autorizados.
+		
 		coll.insert(doc);
 		return "OK";
 	}
