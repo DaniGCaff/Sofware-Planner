@@ -66,26 +66,23 @@
 	<div class="container" ng-show="home.authenticated">
 		
   
-  <!-- Modal Structure -->
+  <!-- MODALES -->
   <div id="modalAsociar" class="modal bottom-sheet">
     <div class="modal-content">
       <h4>Modal Header</h4>
    <input name="id_repo" type="hidden" id="id_repo"/>
-    <p>
-      <input name="tipoAsoc" type="radio" id="test1" value="trello"/>
-      <label for="test1">Trello</label>
-    </p>
-    <p>
-      <input name="tipoAsoc" type="radio" id="test2" value="google_calendar"/>
-      <label for="test2">Google Calendar</label>
-    </p>
-</div>
-    <div class="modal-footer">
-      <a id = "asociar-send" ng-click="home.requestAsoc()" class=" modal-action modal-close waves-effect waves-green btn-flat">Enviar</a>
-      <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+    <div class="collection">
+     <a ng-click="home.loginIntoTrello()" class="collection-item">Trello</a>
+     <a href="#!" class="collection-item">Google Calendar</a>
+    </div>      
+	</div>
+	<div class="modal-footer">
+
     </div>
   </div>
-		<section>
+  
+  <!--  SECCIONES -->
+		<section id="seccion-repos">
 			<h2>Tus repositorios</h2>
 			<ul class="collection" ng-show="home.repos">
 				<li class="collection-item" ng-repeat="(indice, repo) in home.repos"><a
@@ -107,13 +104,40 @@
 		      </div>
         
 		</section>
+		
+		<section id="seccion-boards">
+			<h2>Tus tableros de trello</h2>
+			<ul class="collection">
+				<li class="collection-item" ng-repeat="(indice, board) in home.boards"><a
+					><i class="tiny material-icons">work</i>
+						{{board.name}}</a><a ng-click="home.asociarBoard(board.id)" class="secondary-content"><i class="material-icons">send</i></a></li>
+			</ul>
+			
+			<div class="center" ng-show="!home.boards">
+		    <div class="preloader-wrapper big active" >
+		      <div class="spinner-layer spinner-blue">
+		        <div class="circle-clipper left">
+		          <div class="circle"></div>
+		        </div><div class="gap-patch">
+		          <div class="circle"></div>
+		        </div><div class="circle-clipper right">
+		          <div class="circle"></div>
+		        </div>
+		      </div>
+		      </div>
+		</section>
+		
 	</div>
 	<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
 	<script type="text/javascript"src="/webjars/materializecss/materialize.min.js"></script>
 	<script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
+	<script src="https://api.trello.com/1/client.js?key=3ced367c03efe99a64b0b83fac6fa077"></script>
+	
 	<script type="text/javascript">
-		angular
-				.module("app", [])
+
+	$("#seccion-boards").hide();
+
+    angular.module("app", [])
 				.config(
 						function($httpProvider) {
 							$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -160,6 +184,34 @@
 							alert("ERROR");
 						});
 					}
+					
+					self.loginIntoTrello = function() {
+					    Trello.authorize({
+					        type: "popup",
+					        name: "Trello dashboard",
+					        scope: {
+					            read: true,
+					            write: false },
+					        expiration: "never",
+					        success: self.loadBoards,
+					        error: function() { console.log("Failed authentication"); }
+					    });
+					}
+				    self.loadBoards = function() {
+				        //Get the users boards
+				        Trello.get(
+				                '/members/me/boards/',
+				                self.loadInBoards,
+				                function() { console.log("Failed to load boards"); }
+				        );
+				    }
+				    self.boards;
+				    self.loadInBoards = function(boardsRaw) {
+				    	$("#seccion-repos").hide();
+						$("#seccion-boards").show();
+				    	self.boards = boardsRaw;
+	                	$('#modalAsociar').closeModal();
+				    }
 				});
 	</script>
 </body>
