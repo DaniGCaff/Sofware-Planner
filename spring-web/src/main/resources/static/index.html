@@ -8,7 +8,7 @@
 	href="/webjars/materializecss/css/materialize.min.css"
 	media="screen,projection" />
 </head>
-<body ng-app="app" ng-controller="home as home">
+<body ng-app="appSoftwarePlanner" ng-controller="HomeController as home">
 
 	<nav>
 		<div class="nav-wrapper">
@@ -63,6 +63,7 @@
 		</div>
 
 	</div>
+	
 	<div class="container" ng-show="home.authenticated">
 		
   
@@ -82,35 +83,13 @@
   </div>
   
   <!--  SECCIONES -->
-		<section id="seccion-repos">
-			<h2>Tus repositorios</h2>
-			<ul class="collection" ng-show="home.repos">
-				<li class="collection-item" ng-repeat="(indice, repo) in home.repos"><a
-					><i class="tiny material-icons">work</i>
-						{{repo.name}}</a><a ng-click="home.asociarRepo(repo.name)"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a></li>
-			</ul>
-			
-			<div class="center" ng-show="!home.repos">
-		    <div class="preloader-wrapper big active" >
-		      <div class="spinner-layer spinner-blue">
-		        <div class="circle-clipper left">
-		          <div class="circle"></div>
-		        </div><div class="gap-patch">
-		          <div class="circle"></div>
-		        </div><div class="circle-clipper right">
-		          <div class="circle"></div>
-		        </div>
-		      </div>
-		      </div>
-        
-		</section>
-		
-		<section id="seccion-boards">
+  		<section id="seccion-boards" ng-show="home.estado == 2">
 			<h2>Tus tableros de trello</h2>
-			<ul class="collection">
-				<li class="collection-item" ng-repeat="(indice, board) in home.boards"><a
-					><i class="tiny material-icons">work</i>
-						{{board.name}}</a><a ng-click="home.asociarBoard(board.id)" class="secondary-content"><i class="material-icons">send</i></a></li>
+			<ul class="collection" ng-show="home.boards">
+				<li class="collection-item" ng-repeat="(indice, board) in home.boards">
+					<a><i class="tiny material-icons">work</i>{{board.name}}</a>
+					<a ng-click="home.asociarBoard(board.id)" class="secondary-content"><i class="material-icons">send</i></a>
+				</li>
 			</ul>
 			
 			<div class="center" ng-show="!home.boards">
@@ -125,7 +104,34 @@
 		        </div>
 		      </div>
 		      </div>
+        	</div>
 		</section>
+  
+		<section id="seccion-repos" ng-show="home.estado == 1">
+			<h2>Tus repositorios</h2>
+			<ul class="collection" ng-show="home.repos">
+				<li class="collection-item" ng-repeat="(indice, repo) in home.repos">
+					<a><i class="tiny material-icons">work</i>{{repo.name}}</a>
+					<a ng-click="home.asociarRepo(repo.id)"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a>
+				</li>
+			</ul>
+			
+			<div class="center" ng-show="!home.repos">
+		    <div class="preloader-wrapper big active" >
+		      <div class="spinner-layer spinner-blue">
+		        <div class="circle-clipper left">
+		          <div class="circle"></div>
+		        </div><div class="gap-patch">
+		          <div class="circle"></div>
+		        </div><div class="circle-clipper right">
+		          <div class="circle"></div>
+		        </div>
+		      </div>
+		      </div>
+        	</div>
+		</section>
+		
+
 		
 	</div>
 	<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
@@ -134,15 +140,13 @@
 	<script src="https://api.trello.com/1/client.js?key=3ced367c03efe99a64b0b83fac6fa077"></script>
 	
 	<script type="text/javascript">
-
-	$("#seccion-boards").hide();
-
-    angular.module("app", [])
+    var myApp = angular.module("appSoftwarePlanner", [])
 				.config(
 						function($httpProvider) {
 							$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-						}).controller("home", function($http, $location) {
+						}).controller("HomeController", function($http, $location, $scope) {
 					var self = this;
+					self.estado = 1;
 					$http.get("/user").success(function(data) {
 						if (data.name) {
 							self.user = data.name;
@@ -171,18 +175,30 @@
 						});
 					};
 					
-					var requestAsocName;
 					self.asociarRepo = function(id){
-						  requestAsocName=id;
+						  self.requestAsocRepo=id;
 						  $('#modalAsociar').openModal();
 					}
 					
+					self.asociarBoard = function(id) {
+						  self.requestAsocBoard=id;
+						  self.requestAsoc();
+					}
+					
 					self.requestAsoc = function() {
-						$http.get("/repos/asociar/" + self.user + "/" + requestAsocName).success(function(dato) {
-							alert(dato);
-						}).error(function() {
-							alert("ERROR");
-						});
+						if(self.requestAsocRepo != null && self.requestAsocBoard != null) {
+							$http.get("/repos/asociar/" + self.user + "/" + self.requestAsocRepo+ "/" + self.requestAsocBoard).success(function(dato) {
+								if(dato.response == "ok") {
+									self.requestAsocRepo = null;
+									self.requestAsocBoard = null;
+									self.estado = 1;
+								} else {
+									alert(dato.response)
+								}
+							}).error(function() {
+								alert("ERROR");
+							});
+						}
 					}
 					
 					self.loginIntoTrello = function() {
@@ -199,19 +215,18 @@
 					}
 				    self.loadBoards = function() {
 				        //Get the users boards
-				        Trello.get(
-				                '/members/me/boards/',
-				                self.loadInBoards,
-				                function() { console.log("Failed to load boards"); }
-				        );
+				       Trello.get("members/me/boards?filter=open", self.digestBoards,function() {
+							self.boards = null;
+							console.log("Failed to load boards");
+						});
 				    }
-				    self.boards;
-				    self.loadInBoards = function(boardsRaw) {
-				    	$("#seccion-repos").hide();
-						$("#seccion-boards").show();
-				    	self.boards = boardsRaw;
+				    
+				    self.digestBoards = function(datos) {
+				    	self.boards = datos;
+				    	self.estado = 2;
 	                	$('#modalAsociar').closeModal();
-				    }
+	                	$scope.$apply();
+					}
 				});
 	</script>
 </body>
