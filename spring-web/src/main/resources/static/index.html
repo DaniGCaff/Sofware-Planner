@@ -7,6 +7,13 @@
 <link type="text/css" rel="stylesheet"
 	href="/webjars/materializecss/css/materialize.min.css"
 	media="screen,projection" />
+	
+	<style>
+	.scrollable {
+		height: 250px;
+		overflow:auto;
+	}
+	</style>
 </head>
 <body ng-app="appSoftwarePlanner" ng-controller="HomeController as home">
 
@@ -113,6 +120,7 @@
 				<li class="collection-item" ng-repeat="(indice, repo) in home.repos">
 					<a><i class="tiny material-icons">work</i>{{repo.name}}</a>
 					<a ng-click="home.asociarRepo(repo.id)"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a>
+					<a ng-click="home.verRepo(repo.id)"  ng-show="repo.asoc=='true'" class="secondary-content"><i class="material-icons">work</i></a>
 				</li>
 			</ul>
 			
@@ -131,6 +139,38 @@
         	</div>
 		</section>
 		
+		<section id="seccion-repos" ng-show="home.estado == 3">
+		<div class="row">
+		   <div class="col s4">
+			   <div class="scrollable collection">
+		        <a href="#!" class="collection-item">Task 1</a>
+		        <a href="#!" class="collection-item active">Task 2</a>
+		        <a href="#!" class="collection-item">Task 3</a>
+		        <a href="#!" class="collection-item">Task 4</a>
+		      </div>
+		  </div>
+		  <div class="col s8">
+			   <div class="scrollable collection">
+		        <a href="#!" class="collection-item">Commit 1</a>
+		        <a href="#!" class="collection-item active">Commit 2</a>
+		        <a href="#!" class="collection-item">Commit 3</a>
+		        <a href="#!" class="collection-item">Commit 4</a>
+		      </div>
+		  </div>
+		</div>
+		<div class="row">
+		   <div class="col s12">
+			   <div class="card scrollable blue-grey darken-1">
+	            <div class="card-content white-text">
+	              <span class="card-title">Card Title</span>
+	              <p>I am a very simple card. I am good at containing small bits of information.
+	              I am convenient because I require little markup to use effectively.</p>
+	            </div>
+          	   </div>
+		  </div>
+		</div>
+		</section>
+		
 
 		
 	</div>
@@ -140,6 +180,7 @@
 	<script src="https://api.trello.com/1/client.js?key=3ced367c03efe99a64b0b83fac6fa077"></script>
 	
 	<script type="text/javascript">
+	
     var myApp = angular.module("appSoftwarePlanner", [])
 				.config(
 						function($httpProvider) {
@@ -178,6 +219,11 @@
 					self.asociarRepo = function(id){
 						  self.requestAsocRepo=id;
 						  $('#modalAsociar').openModal();
+					}
+					
+					self.verRepo = function(id){
+						self.requestAsocRepo=id;
+						self.estado = 3;
 					}
 					
 					self.asociarBoard = function(id) {
