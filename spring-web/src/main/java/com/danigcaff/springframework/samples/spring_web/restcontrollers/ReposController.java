@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_web;
+package com.danigcaff.springframework.samples.spring_web.restcontrollers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.danigcaff.springframework.samples.spring_web.MongoManager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;

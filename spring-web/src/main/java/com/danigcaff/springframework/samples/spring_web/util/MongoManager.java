@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_web;
+package com.danigcaff.springframework.samples.spring_web.util;
 
 import java.net.UnknownHostException;
 

@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_web;
+package com.danigcaff.springframework.samples.spring_web.restcontrollers;
 
 import java.security.Principal;
 import java.util.LinkedHashMap;
