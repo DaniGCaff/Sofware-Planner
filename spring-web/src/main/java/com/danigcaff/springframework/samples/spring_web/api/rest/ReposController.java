@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_web.restcontrollers;
+package com.danigcaff.springframework.samples.spring_web.api.rest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.danigcaff.springframework.samples.spring_web.api.ReposApi;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -29,7 +30,7 @@ import com.mongodb.DBObject;
 @RestController
 @EnableOAuth2Client
 @Order(7)
-public class ReposController {
+public class ReposController implements ReposApi {
 	
 	@Value("${github.client.clientId}")
 	private String clientId;
@@ -39,6 +40,9 @@ public class ReposController {
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
 	
+	/* (non-Javadoc)
+	 * @see com.danigcaff.springframework.samples.spring_web.api.ReposApi#listView()
+	 */
 	@RequestMapping("/repos")
 	public List<Map<String,String>> listView() {
 		
@@ -77,6 +81,9 @@ public class ReposController {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.danigcaff.springframework.samples.spring_web.api.ReposApi#asociate(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@RequestMapping("/repos/asociar/{owner}/{repoId}/{boardId}")
 	public Map <String, String> asociate(@PathVariable("owner") String owner, @PathVariable("repoId") String repoId, @PathVariable("boardId") String boardId){
 		
@@ -99,6 +106,9 @@ public class ReposController {
 		return map;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.danigcaff.springframework.samples.spring_web.api.ReposApi#list(java.lang.String)
+	 */
 	@RequestMapping("/repos/board/{repoId}")
 	public Map <String, String> list(@PathVariable("repoId") String repoId){
 		/*
