@@ -6,13 +6,13 @@ import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
 import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 import com.mongodb.ReflectionDBObject;
 
-public abstract class EntityAbstract extends ReflectionDBObject implements Entity {
+public abstract class EntityAbstractMongo extends ReflectionDBObject implements Entity {
 
 	private String id;
 	private String creation;
 	private String lastModification;
 	
-	public EntityAbstract(String creation, String id) {
+	public EntityAbstractMongo(String creation, String id) {
 		this.creation = creation;
 		this.lastModification = this.creation;
 		this.id = id;

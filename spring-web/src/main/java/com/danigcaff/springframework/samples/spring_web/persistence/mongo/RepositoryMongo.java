@@ -3,7 +3,7 @@ package com.danigcaff.springframework.samples.spring_web.persistence.mongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
 import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 
-public class RepositoryMongo extends EntityAbstract implements Repository {
+public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 
 	private String name;
 	private Boolean asoc;
