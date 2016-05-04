@@ -26,12 +26,6 @@ public class ListenController {
 	private static String PUSH_TYPE = "pusher";
 	private static String MEMBER_TYPE = "member";
 
-	@RequestMapping("/")
-	@ResponseBody
-	public String index() {
-		return "Hola mundo!!";
-	}
-
 	public void mongoDBConnection() {
 		try {
 			client = new MongoClient("localhost", 27017);
