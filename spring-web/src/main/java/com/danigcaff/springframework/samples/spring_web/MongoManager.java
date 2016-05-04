@@ -12,7 +12,7 @@ public class MongoManager {
 	private Mongo client;
 	private DB database;
 	
-	public enum COLLECTIONS { AUTORIZADOS }
+	public enum COLLECTIONS { AUTORIZADOS, TASKS }
 	
 	private MongoManager() {
 		try {

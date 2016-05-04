@@ -38,9 +38,7 @@ import com.mongodb.Mongo;
 @RestController
 @EnableOAuth2Client
 @Order(7)
-public class ReposController implements BeanFactoryAware {
-	
-	private BeanFactory beanFactory;
+public class ReposController {
 	
 	@Value("${github.client.clientId}")
 	private String clientId;
@@ -110,7 +108,24 @@ public class ReposController implements BeanFactoryAware {
 		return map;
 	}
 	
-	public void setBeanFactory(BeanFactory arg0) throws BeansException {
-		this.beanFactory = arg0;
+	@RequestMapping("/repos/board/{repoId}")
+	public Map <String, String> list(@PathVariable("repoId") String repoId){
+		/*
+		 * A partir del repoId se debe conseguir el boardId en la collection de autorizados.
+		 */
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		String response = "ok";
+		DB database = MongoManager.getManager().getDatabase();
+		if (database.collectionExists(MongoManager.COLLECTIONS.AUTORIZADOS.name())) {
+			DBCollection coll = database.getCollection(MongoManager.COLLECTIONS.AUTORIZADOS.name());
+			DBObject options = BasicDBObjectBuilder.start().add("repoId", repoId).get();
+			DBObject fields = BasicDBObjectBuilder.start().add("boardId", 1).get();
+			DBObject result = coll.findOne(options, fields);
+			map.put("boardId", result.get("boardId").toString());
+		} else {
+			response = "not ok";
+		}
+		map.put("response", response);
+		return map;
 	}
 }

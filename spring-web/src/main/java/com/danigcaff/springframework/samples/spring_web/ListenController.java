@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_rest_listener;
+package com.danigcaff.springframework.samples.spring_web;
 
 import java.net.UnknownHostException;
 
@@ -18,7 +18,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
 
 @Controller
-public class MainController {
+public class ListenController {
 	private DBCollection coll;
 	private DB database;
 	private Mongo client;
@@ -50,9 +50,9 @@ public class MainController {
 		return json;
 	}
 
-	@RequestMapping(value = "/listen/event", method = RequestMethod.POST)
+	@RequestMapping(value = "/listen/github", method = RequestMethod.POST)
 	@ResponseBody
-	public String eventListener(@RequestBody String evento) {
+	public String gitHubListener(@RequestBody String evento) {
 		//TODO. Comprobar que la url del repositorio existe en la colección de autorizados.
 		System.out.println(evento);
 		mongoDBConnection();

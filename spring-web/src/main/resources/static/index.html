@@ -143,18 +143,12 @@
 		<div class="row">
 		   <div class="col s4">
 			   <div class="scrollable collection">
-		        <a href="#!" class="collection-item">Task 1</a>
-		        <a href="#!" class="collection-item active">Task 2</a>
-		        <a href="#!" class="collection-item">Task 3</a>
-		        <a href="#!" class="collection-item">Task 4</a>
+		        <a href="#!" class="collection-item" ng-repeat="task in home.tasks">{{task.name}}</a>
 		      </div>
 		  </div>
 		  <div class="col s8">
 			   <div class="scrollable collection">
-		        <a href="#!" class="collection-item">Commit 1</a>
-		        <a href="#!" class="collection-item active">Commit 2</a>
-		        <a href="#!" class="collection-item">Commit 3</a>
-		        <a href="#!" class="collection-item">Commit 4</a>
+				<a href="#!" class="collection-item" ng-repeat="commit in home.commits">{{commit.message}}</a>
 		      </div>
 		  </div>
 		</div>
@@ -223,6 +217,7 @@
 					
 					self.verRepo = function(id){
 						self.requestAsocRepo=id;
+						self.listTasks();
 						self.estado = 3;
 					}
 					
@@ -273,6 +268,27 @@
 	                	$('#modalAsociar').closeModal();
 	                	$scope.$apply();
 					}
+				    
+				    self.listTasks = function() {
+				    	$http.get("/repos/board/" + self.requestAsocRepo).success(function(dato) {
+							if(dato.response == "ok") {
+								self.requestAsocBoard = dato.boardId;
+						    	Trello.get("/boards/"+ dato.boardId +"/cards", self.digestTasks, function() {
+						    		self.tasks = null;
+						    		console.log("Failed to load tasks");
+						    	});
+							} else {
+								alert(dato.response)
+							}
+						}).error(function() {
+							alert("ERROR");
+						});
+				    }
+				    
+				    self.digestTasks = function(datos) {
+				    	self.tasks = datos;
+				    	$scope.$apply();
+				    }
 				});
 	</script>
 </body>
