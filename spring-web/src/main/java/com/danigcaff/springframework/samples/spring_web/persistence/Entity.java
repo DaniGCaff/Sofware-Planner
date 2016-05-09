@@ -10,5 +10,5 @@ public interface Entity {
 	public String getLastModificationDate();
 	public Entity setLastModificationDate(String date);
 	public void save();
-	public Entity readById();
+	Entity readById();
 }

@@ -5,8 +5,8 @@ import com.danigcaff.springframework.samples.spring_web.persistence.Task;
 
 public class TaskMongo extends EntityAbstractMongo implements Task {
 
-	public TaskMongo(String creation, String id) {
-		super(creation, id);
+	public TaskMongo(String id) {
+		super(id);
 		// TODO Auto-generated constructor stub
 	}
 

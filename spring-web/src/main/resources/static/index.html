@@ -34,9 +34,15 @@
 
 	<div class="container" ng-show="!home.authenticated">
 
-		<div style="height: 50%;" class="valign-wrapper  center-align">
-			<span class="valign center-block"><a class="valign"
-				href="/login/github"><button class="btn btn-primary">Iniciar sesión</button></a></span>
+		<div style="height: 50%;" class="valign-wrapper  center-align row">
+			<div class="col s6">
+				<span class="valign center-block"><a class="valign"
+				href="/login/app"><button class="btn btn-primary">Iniciar sesión</button></a></span>
+			</div>
+			<div class="col s6">
+			<span class="valign center-block"><a class="btn btn-primary modal-trigger"
+				ng-click="home.openRegister()">Registrarse</a></span>
+			</div>
 		</div>
 
 
@@ -71,6 +77,29 @@
 
 	</div>
 	
+	  <!-- Modal Structure -->
+  <div id="modalRegister" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Register</h4>
+     
+     <div class="row">
+	     <div class="input-field col s12">
+	          <input placeholder="Username" id="username" type="text" class="validate">
+	          <label for="username">Username</label>
+	     </div>
+	     
+	     <div class="input-field col s12">
+	          <input placeholder="Password" id="password" type="password" class="validate">
+	          <label for="password">Password</label>
+	     </div>
+     </div>
+     
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+    </div>
+  </div> 
+	
 	<div class="container" ng-show="home.authenticated">
 		
   
@@ -78,16 +107,18 @@
   <div id="modalAsociar" class="modal bottom-sheet">
     <div class="modal-content">
       <h4>Modal Header</h4>
-   <input name="id_repo" type="hidden" id="id_repo"/>
-    <div class="collection">
-     <a ng-click="home.loginIntoTrello()" class="collection-item">Trello</a>
-     <a href="#!" class="collection-item">Google Calendar</a>
-    </div>      
+	   <input name="id_repo" type="hidden" id="id_repo"/>
+	    <div class="collection">
+	     <a ng-click="home.loginIntoTrello()" class="collection-item">Trello</a>
+	     <a href="#!" class="collection-item">Google Calendar</a>
+	    </div>      
 	</div>
 	<div class="modal-footer">
 
     </div>
   </div>
+  
+ 
   
   <!--  SECCIONES -->
   		<section id="seccion-boards" ng-show="home.estado == 2">
@@ -174,7 +205,6 @@
 	<script src="https://api.trello.com/1/client.js?key=3ced367c03efe99a64b0b83fac6fa077"></script>
 	
 	<script type="text/javascript">
-	
     var myApp = angular.module("appSoftwarePlanner", [])
 				.config(
 						function($httpProvider) {
@@ -288,6 +318,10 @@
 				    self.digestTasks = function(datos) {
 				    	self.tasks = datos;
 				    	$scope.$apply();
+				    }
+				    
+				    self.openRegister = function() {
+				    	$('#modalRegister').openModal();
 				    }
 				});
 	</script>

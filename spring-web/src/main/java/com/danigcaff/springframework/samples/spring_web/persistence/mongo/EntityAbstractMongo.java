@@ -5,17 +5,18 @@ import java.util.Date;
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
 import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 import com.mongodb.ReflectionDBObject;
+import com.sun.javafx.collections.MappingChange.Map;
 
 public abstract class EntityAbstractMongo extends ReflectionDBObject implements Entity {
 
-	private String id;
-	private String creation;
-	private String lastModification;
+	protected String id;
+	protected String creation;
+	protected String lastModification;
 	
-	public EntityAbstractMongo(String creation, String id) {
-		this.creation = creation;
+	public EntityAbstractMongo(String id) {
 		this.lastModification = this.creation;
 		this.id = id;
+		this.readById();
 	}
 	
 	public String getId() {

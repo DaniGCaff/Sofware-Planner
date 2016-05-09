@@ -2,8 +2,10 @@ package com.danigcaff.springframework.samples.spring_web.util;
 
 import java.net.UnknownHostException;
 
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
@@ -12,7 +14,7 @@ public class MongoManager {
 	private Mongo client;
 	private DB database;
 	
-	public enum COLLECTIONS { AUTORIZADOS, TASKS }
+	public enum COLLECTIONS { AUTORIZADOS, TASKS, USERS, ASOCIADOS }
 	
 	private MongoManager() {
 		try {
@@ -38,5 +40,13 @@ public class MongoManager {
 		return database;
 	}
 	
+	public DBCollection getCollection(COLLECTIONS collection) {
+		if (!database.collectionExists(collection.name())) {
+			DBObject options = BasicDBObjectBuilder.start().add("capped", false).get();
+			database.createCollection(collection.name(), options);
+		}
+		DBCollection coll = database.getCollection(collection.name());
+		return coll;
+	}
 	
 }

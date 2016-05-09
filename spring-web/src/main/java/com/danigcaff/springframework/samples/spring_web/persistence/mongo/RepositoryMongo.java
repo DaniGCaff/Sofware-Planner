@@ -8,8 +8,8 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	private String name;
 	private Boolean asoc;
 	
-	public RepositoryMongo(String creation, String id, String name) {
-		super(creation, id);
+	public RepositoryMongo(String id, String name) {
+		super(id);
 		this.name = name;
 	}
 
