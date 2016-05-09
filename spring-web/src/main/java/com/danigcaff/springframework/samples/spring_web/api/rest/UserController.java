@@ -5,10 +5,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.api.UserApi;
+import com.danigcaff.springframework.samples.spring_web.persistence.User;
+import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo;
+import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 @RestController
 @EnableAuthorizationServer
@@ -21,5 +31,10 @@ public class UserController implements UserApi {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("name", principal.getName());
 		return map;
+	}
+	
+	@RequestMapping(value = "/user/", method = RequestMethod.POST)
+	public void createUser(@RequestBody Map<String, String> json) {
+		UserMongo.insert(json); // TODO Esto podría hacerse con un Builder
 	}
 }
