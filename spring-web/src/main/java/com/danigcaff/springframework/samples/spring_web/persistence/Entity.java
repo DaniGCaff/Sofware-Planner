@@ -1,7 +1,5 @@
 package com.danigcaff.springframework.samples.spring_web.persistence;
 
-import java.util.Date;
-
 public interface Entity {
 	public String getId();
 	public Entity setId(String id);

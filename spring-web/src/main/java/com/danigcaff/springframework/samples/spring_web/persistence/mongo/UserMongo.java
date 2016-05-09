@@ -5,11 +5,11 @@ import java.util.Map;
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
 import com.danigcaff.springframework.samples.spring_web.persistence.User;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
+import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 
 public class UserMongo extends EntityAbstractMongo implements User {
 
@@ -62,13 +62,15 @@ public class UserMongo extends EntityAbstractMongo implements User {
 
 	@Override
 	public void save() {
+		DBObject query = new BasicDBObject(FIELDS.id.name(), id);
 		DBObject doc = BasicDBObjectBuilder.start()
 						.add(FIELDS.name.name(), name)
 						.add(FIELDS.gitHubUserId.name(), gitHubUserId)
 						.add(FIELDS.trelloUserId.name(), trelloUserId)
 						.add(FIELDS.password.name(), password)
 						.get();
-		// TODO ... upsert
+		DBCollection coll = MongoManager.getManager().getCollection(COLLECTIONS.USERS);
+		coll.update(query, doc);
 	}
 
 	@Override
@@ -76,11 +78,18 @@ public class UserMongo extends EntityAbstractMongo implements User {
 		DBObject filter = BasicDBObjectBuilder.start().add(FIELDS.id.name(), id).get();
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.USERS);
 		DBObject result = coll.findOne(filter, allFields);
-		return UserMongo.parse(result);
+		
+		UserMongo aux = UserMongo.parse(result);
+		this.name = aux.name;
+		this.password = aux.password;
+		this.gitHubUserId = aux.gitHubUserId;
+		this.lastModification = aux.lastModification;
+		this.creation = aux.lastModification;
+		return this;
 	}
 	
-	public static User parse(DBObject object) {
-		User user = new UserMongo((String)object.get(FIELDS.id.name()));
+	public static UserMongo parse(DBObject object) {
+		UserMongo user = new UserMongo((String)object.get(FIELDS.id.name()));
 		user.setName((String)object.get(FIELDS.name.name()));
 		user.setPassword((String)object.get(FIELDS.password.name()));
 		user.setGitHubUserId((String)object.get(FIELDS.gitHubUserId.name()));

@@ -92,11 +92,10 @@
 	          <input placeholder="Password" id="password" type="password" class="validate">
 	          <label for="password">Password</label>
 	     </div>
-     </div>
-     
+     </div>  
     </div>
     <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+      <a href="#!" ng-click="home.commitRegister()" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
     </div>
   </div> 
 	
@@ -322,6 +321,10 @@
 				    
 				    self.openRegister = function() {
 				    	$('#modalRegister').openModal();
+				    }
+				    
+				    self.commitRegister = function() {
+				    	$('#modalRegister').closeModal();
 				    }
 				});
 	</script>

@@ -1,21 +1,16 @@
 package com.danigcaff.springframework.samples.spring_web.loader.implementation;
 
-import java.net.UnknownHostException;
-
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
 
 @Controller

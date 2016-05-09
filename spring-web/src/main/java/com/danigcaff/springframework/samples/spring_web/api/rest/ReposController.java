@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.api.ReposApi;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
+import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -67,16 +68,12 @@ public class ReposController implements ReposApi {
     }
 	
 	private boolean isRepoAsoc(String owner, String repoId) {
-		DB database = MongoManager.getManager().getDatabase();
-		if (database.collectionExists(MongoManager.COLLECTIONS.AUTORIZADOS.name())) {
-			DBCollection coll = database.getCollection(MongoManager.COLLECTIONS.AUTORIZADOS.name());
-			DBObject queryDoc = new BasicDBObject();
-			queryDoc.put("owner", owner);
-			queryDoc.put("repoId", repoId);
-			DBObject result = coll.findOne(queryDoc);
-			if(result != null) {
-				return true;
-			}
+		DBCollection coll = MongoManager.getManager().getCollection(COLLECTIONS.AUTORIZADOS);
+		DBObject queryDoc = new BasicDBObject("owner", owner)
+								.append("repoId", repoId);
+		DBObject result = coll.findOne(queryDoc);
+		if(result != null) {
+			return true;
 		}
 		return false;
 	}

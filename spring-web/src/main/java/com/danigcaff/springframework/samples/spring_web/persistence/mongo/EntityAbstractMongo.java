@@ -1,11 +1,7 @@
 package com.danigcaff.springframework.samples.spring_web.persistence.mongo;
 
-import java.util.Date;
-
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
-import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 import com.mongodb.ReflectionDBObject;
-import com.sun.javafx.collections.MappingChange.Map;
 
 public abstract class EntityAbstractMongo extends ReflectionDBObject implements Entity {
 
