@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.api.UserApi;
+import com.danigcaff.springframework.samples.spring_web.persistence.User;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo;
 
 @RestController
@@ -27,7 +28,7 @@ public class UserController implements UserApi {
 	@RequestMapping({ "/user", "/me" })
 	public Map<String, String> user(Principal principal) {
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put("name", principal.getName());
+		map.put("gitHubUserId", principal.getName());
 		return map;
 	}
 	
@@ -36,6 +37,19 @@ public class UserController implements UserApi {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		try{
 			UserMongo.insert(json);
+			map.put("response", "ok");
+		}
+		catch (Exception ex) {
+			map.put("response", ex.getMessage());
+		}
+		return map;
+	}
+	
+	@RequestMapping(value = "/user/login", method = RequestMethod.POST)
+	public Map<String, String> login(@RequestBody Map<String, String> json) {
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		try{
+			User usuario = new UserMongo(json.get("id"), json.get("password"));
 			map.put("response", "ok");
 		}
 		catch (Exception ex) {

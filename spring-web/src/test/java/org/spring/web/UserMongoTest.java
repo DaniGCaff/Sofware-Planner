@@ -37,11 +37,17 @@ public class UserMongoTest extends TestCase {
 		
 	    UserMongo.insert(user);
         
-        User usuarioLeer = new UserMongo("DaniGCaff");
+        User usuarioLeer;
+		try {
+			usuarioLeer = new UserMongo("DaniGCaff", "1234");
+	        assertEquals("Nombre distinto", "Dani", usuarioLeer.getName());
+	        assertEquals("Git distinto", "DaniGCaff", usuarioLeer.getGitHubUserId());
+	        assertEquals("Trello distinto", "DaniGCaffTrello", usuarioLeer.getTrelloUserId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         
-        assertEquals("Nombre distinto", "Dani", usuarioLeer.getName());
-        assertEquals("Git distinto", "DaniGCaff", usuarioLeer.getGitHubUserId());
-        assertEquals("Trello distinto", "DaniGCaffTrello", usuarioLeer.getTrelloUserId());
+
     }
 
 }

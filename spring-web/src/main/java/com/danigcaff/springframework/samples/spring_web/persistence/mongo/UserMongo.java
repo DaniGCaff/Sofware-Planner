@@ -24,8 +24,11 @@ public class UserMongo extends EntityAbstractMongo implements User {
 			.add(FIELDS.trelloUserId.name(), 1).add(FIELDS.password.name(), 1)
 			.get();
 	
-	public UserMongo(String id) {
+	public UserMongo(String id, String password) throws Exception {
 		super(id);
+		
+		if(!password.equals(this.password))
+			throw new Exception("Contraseña erronea.");
 	}
 
 	public String getName() {
@@ -90,8 +93,8 @@ public class UserMongo extends EntityAbstractMongo implements User {
 		return null;
 	}
 	
-	public static UserMongo parse(DBObject object) {
-		UserMongo user = new UserMongo((String)object.get(FIELDS.id.name()));
+	public static UserMongo parse(DBObject object) throws Exception {
+		UserMongo user = new UserMongo((String)object.get(FIELDS.id.name()), (String)object.get(FIELDS.password.name()));
 		user.setName((String)object.get(FIELDS.name.name()));
 		user.setPassword((String)object.get(FIELDS.password.name()));
 		user.setGitHubUserId((String)object.get(FIELDS.gitHubUserId.name()));

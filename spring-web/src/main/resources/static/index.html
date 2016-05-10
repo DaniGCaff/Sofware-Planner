@@ -93,6 +93,11 @@
 	          <label for="password">Password</label>
 	     </div>
 	     
+	     <div class="input-field col s12">
+	          <input placeholder="Nombre" id="register-name" type="text" class="validate">
+	          <label for="username">Nombre</label>
+	     </div>
+	     
 	     <div class="input-field col s6">
 	     	  <a ng-hide="home.gitHubUserId != null" href="/login/github"><button class="btn" id="gitHub">Iniciar sesión con GitHub</button></a>
 	          <input ng-show="home.gitHubUserId != null" value="{{home.gitHubUserId}}" disabled id="gitHub" type="text" class="validate">  
@@ -247,9 +252,8 @@
 					var self = this;
 					self.estado = 1;
 					$http.get("/user").success(function(data) {
-						if (data.name) {
-							self.user = data.name;
-							self.gitHubUserId = data.name;
+						if (data.gitHubUserId) {
+							self.gitHubUserId = data.gitHubUserId;
 							if(estado = 1) {
 						    	$('#modalRegister').openModal();
 							} else {
@@ -378,6 +382,7 @@
 				    	$('#modalRegister').closeModal();
 				    	$http.post("/user/create", {"id":$("#register-username").val(),
 				    		"password":$("#register-password").val(),
+				    		"name":$("#register-name").val(),
 				    		"trelloUserId":self.trelloUserId,
 				    		"gitHubUserId":self.gitHubUserId});
 				    }
@@ -388,6 +393,19 @@
 				    
 				    self.commitLogin = function() {
 				    	$('#modalLogin').closeModal();
+				    	$http.post("/user/login", {"id":$("#login-username").val(),
+				    		"password":$("#login-password").val()}).then(function successCallback(resp) {
+				    			console.log(resp);
+				    			self.resp = resp;
+				    			if(resp.data.response == "ok") {
+				    				self.authenticated = true;
+				    			} else {
+				    				alert(resp.data.response);
+				    			}
+				    		}, function errorCallback(resp) {
+				    			console.log(resp.data);
+				    			alert(restp.data);
+				    		});
 				    }
 				});
 	</script>
