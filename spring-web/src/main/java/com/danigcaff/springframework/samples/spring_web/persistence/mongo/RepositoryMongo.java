@@ -1,25 +1,40 @@
 package com.danigcaff.springframework.samples.spring_web.persistence.mongo;
 
+import java.util.Map;
+
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
 import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
+import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo.FIELDS;
+import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
+import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 
-	private String name;
+	private String repoId;
 	private String owner;
 	private String boardId;
 	private Boolean asoc;
-
-	public RepositoryMongo(String id) {
-		super(id);
+	public enum FIELDS {id, creation, lastModification, owner, repoId, boardId, asoc}
+	public RepositoryMongo(String repoId) {
+		super(repoId);
+		this.repoId=repoId;
 	}
 
-	public String getName() {
-		return name;
+	protected static DBObject allFields = BasicDBObjectBuilder.start()
+			.add(FIELDS.id.name(), 1).add(FIELDS.creation.name(), 1).add(FIELDS.lastModification.name(), 1)
+			.add(FIELDS.owner.name(), 1).add(FIELDS.repoId.name(), 1)
+			.add(FIELDS.boardId.name(), 1).add(FIELDS.asoc.name(), 1)
+			.get();
+	public String getRepoId() {
+		return repoId;
 	}
 
-	public Repository setName(String name) {
-		this.name = name;
+	public Repository setRepoId(String repoId) {
+		this.repoId = repoId;
 		return this;
 	}
 
@@ -52,13 +67,55 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
+		DBObject query = new BasicDBObject(FIELDS.repoId.name(), repoId);
+		DBObject doc = BasicDBObjectBuilder.start()
+						.add(FIELDS.owner.name(), owner)
+						.add(FIELDS.repoId.name(), repoId)
+						.add(FIELDS.boardId.name(), boardId)
+						.add(FIELDS.creation.name(), creation)
+						.get();
+		DBCollection coll = MongoManager.getManager().getCollection(COLLECTIONS.AUTORIZADOS);
+		coll.update(query, doc);
 	}
+
 
 	@Override
 	public Entity readById() {
-		// TODO Auto-generated method stub
+		DBObject filter = BasicDBObjectBuilder.start().add(FIELDS.repoId.name(), id).get();
+		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
+		DBObject result = coll.findOne(filter, allFields);
+		if(result != null) {
+			this.owner = (String) result.get(FIELDS.owner.name());
+			this.repoId = (String) result.get(FIELDS.repoId.name());
+			this.boardId = (String) result.get(FIELDS.boardId.name());
+			this.asoc = (Boolean) result.get(FIELDS.asoc.name());
+			this.lastModification = (String) result.get(FIELDS.lastModification.name());
+			this.creation = (String) result.get(FIELDS.creation.name());
+			return this;
+		}
 		return null;
+	}
+	
+	public static RepositoryMongo parse(DBObject object) {
+		RepositoryMongo repo = new RepositoryMongo((String)object.get(FIELDS.id.name()));
+		repo.setOwner((String)object.get(FIELDS.owner.name()));
+		repo.setRepoId((String)object.get(FIELDS.repoId.name()));
+		repo.setBoardId((String)object.get(FIELDS.boardId.name()));
+		repo.setAsoc((Boolean)object.get(FIELDS.asoc.name()));
+		repo.setLastModificationDate((String)object.get(FIELDS.creation.name()));
+		repo.setCreationDate((String)object.get(FIELDS.creation.name()));
+		return repo;
+	}
+	
+	public static void insert(Map<String, String> data) {
+		DBObject doc = BasicDBObjectBuilder.start()
+				.add(FIELDS.owner.name(), data.get(FIELDS.owner.name()))
+				.add(FIELDS.repoId.name(), data.get(FIELDS.repoId.name()))
+				.add(FIELDS.boardId.name(), data.get(FIELDS.boardId.name()))
+				.add(FIELDS.creation.name(), data.get(FIELDS.creation.name()))
+				.get();
+		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
+		coll.insert(doc);
 	}
 
 }

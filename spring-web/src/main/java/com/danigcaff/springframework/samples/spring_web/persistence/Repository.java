@@ -1,8 +1,8 @@
 package com.danigcaff.springframework.samples.spring_web.persistence;
 
 public interface Repository extends Entity {
-	public String getName();
-	public Repository setName(String name);
+	public String getRepoId();
+	public Repository setRepoId(String repoId);
 	public Boolean getAsoc();
 	public Repository setAsoc(Boolean asoc);
 	public String getOwner();

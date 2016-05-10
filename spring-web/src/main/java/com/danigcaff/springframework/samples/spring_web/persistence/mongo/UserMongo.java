@@ -19,7 +19,7 @@ public class UserMongo extends EntityAbstractMongo implements User {
 	protected String password;
 	public enum FIELDS {id, creation, lastModification, name, password, gitHubUserId, trelloUserId}
 	protected static DBObject allFields = BasicDBObjectBuilder.start()
-			.add(FIELDS.id.name(), 1).add(FIELDS.creation.name(), 1).add(FIELDS.creation.name(), 1)
+			.add(FIELDS.id.name(), 1).add(FIELDS.creation.name(), 1).add(FIELDS.lastModification.name(), 1)
 			.add(FIELDS.name.name(), 1).add(FIELDS.gitHubUserId.name(), 1)
 			.add(FIELDS.trelloUserId.name(), 1).add(FIELDS.password.name(), 1)
 			.get();
