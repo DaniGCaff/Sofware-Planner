@@ -4,7 +4,11 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,11 +18,12 @@ import com.danigcaff.springframework.samples.spring_web.api.UserApi;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo;
 
 @RestController
-@EnableAuthorizationServer
+@EnableOAuth2Client
 public class UserController implements UserApi {
-	/* (non-Javadoc)
-	 * @see com.danigcaff.springframework.samples.spring_web.api.UserApi#user(java.security.Principal)
-	 */
+	
+	@Autowired
+	OAuth2ClientContext oauth2ClientContext;
+	
 	@RequestMapping({ "/user", "/me" })
 	public Map<String, String> user(Principal principal) {
 		Map<String, String> map = new LinkedHashMap<String, String>();
@@ -26,8 +31,16 @@ public class UserController implements UserApi {
 		return map;
 	}
 	
-	@RequestMapping(value = "/user/", method = RequestMethod.POST)
-	public void createUser(@RequestBody Map<String, String> json) {
-		UserMongo.insert(json); // TODO Esto podría hacerse con un Builder
+	@RequestMapping(value = "/user/create", method = RequestMethod.POST)
+	public Map<String, String> createUser(@RequestBody Map<String, String> json) {
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		try{
+			UserMongo.insert(json);
+			map.put("response", "ok");
+		}
+		catch (Exception ex) {
+			map.put("response", ex.getMessage());
+		}
+		return map;
 	}
 }

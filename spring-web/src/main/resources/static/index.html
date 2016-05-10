@@ -37,7 +37,7 @@
 		<div style="height: 50%;" class="valign-wrapper  center-align row">
 			<div class="col s6">
 				<span class="valign center-block"><a class="valign"
-				href="/login/app"><button class="btn btn-primary">Iniciar sesión</button></a></span>
+				ng-click="home.openLogin()"><button class="btn btn-primary">Iniciar sesión</button></a></span>
 			</div>
 			<div class="col s6">
 			<span class="valign center-block"><a class="btn btn-primary modal-trigger"
@@ -84,18 +84,53 @@
      
      <div class="row">
 	     <div class="input-field col s12">
-	          <input placeholder="Username" id="username" type="text" class="validate">
+	          <input placeholder="Username" id="register-username" type="text" class="validate">
 	          <label for="username">Username</label>
 	     </div>
 	     
 	     <div class="input-field col s12">
-	          <input placeholder="Password" id="password" type="password" class="validate">
+	          <input placeholder="Password" id="register-password" type="password" class="validate">
+	          <label for="password">Password</label>
+	     </div>
+	     
+	     <div class="input-field col s6">
+	     	  <a ng-hide="home.gitHubUserId != null" href="/login/github"><button class="btn" id="gitHub">Iniciar sesión con GitHub</button></a>
+	          <input ng-show="home.gitHubUserId != null" value="{{home.gitHubUserId}}" disabled id="gitHub" type="text" class="validate">  
+	          <label ng-show="home.gitHubUserId != null" for="gitHub">Usuario de GitHub</label>
+	     </div>
+	     
+	     <div class="input-field col s6">
+	     	  <button ng-hide="home.trelloUserId != null" ng-click="home.loginIntoTrello()" class="btn" id="trello">Iniciar sesión con Trello</button>
+	          <input ng-hide="home.trelloUserId == null" value="{{home.trelloUsername}}" disabled id="trello" type="text" class="validate">  
+	          <label ng-hide="home.trelloUserId == null" for="trello">Usuario de trello</label>
+	     </div>
+	     
+     </div>  
+    </div>
+    <div class="modal-footer">
+      <a href="#!" ng-click="home.commitRegister()" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+    </div>
+  </div> 
+  
+  	  <!-- Modal Structure -->
+  <div id="modalLogin" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Iniciar sesión</h4>
+     
+     <div class="row">
+	     <div class="input-field col s12">
+	          <input placeholder="Username" id="login-username" type="text" class="validate">
+	          <label for="username">Username</label>
+	     </div>
+	     
+	     <div class="input-field col s12">
+	          <input placeholder="Password" id="login-password" type="password" class="validate">
 	          <label for="password">Password</label>
 	     </div>
      </div>  
     </div>
     <div class="modal-footer">
-      <a href="#!" ng-click="home.commitRegister()" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+      <a href="#!" ng-click="home.commitLogin()" class="modal-action modal-close waves-effect waves-green btn-flat">Iniciar sesión</a>
     </div>
   </div> 
 	
@@ -214,12 +249,17 @@
 					$http.get("/user").success(function(data) {
 						if (data.name) {
 							self.user = data.name;
-							self.authenticated = true;
-							$http.get("/repos").success(function(dato) {
-								self.repos = dato;
-							}).error(function() {
-								self.repos = null;
-							});
+							self.gitHubUserId = data.name;
+							if(estado = 1) {
+						    	$('#modalRegister').openModal();
+							} else {
+								self.authenticated = true;
+								$http.get("/repos").success(function(dato) {
+									self.repos = dato;
+								}).error(function() {
+									self.repos = null;
+								});
+							}
 
 						} else {
 							self.user = "N/A";
@@ -279,13 +319,24 @@
 					            read: true,
 					            write: false },
 					        expiration: "never",
-					        success: self.loadBoards,
+					        success: self.publishTrelloData,
 					        error: function() { console.log("Failed authentication"); }
 					    });
 					}
+					
+					self.publishTrelloData = function() {
+						Trello.get("members/me", function(datos) {
+							self.trelloUserId = datos.id;
+							self.trelloUsername = datos.username;
+						},function() {
+							self.trelloUserId = null;
+							self.trelloUsername = null;
+						});
+					}
+					
 				    self.loadBoards = function() {
 				        //Get the users boards
-				       Trello.get("members/me/boards?filter=open", self.digestBoards,function() {
+				        Trello.get("members/me/boards?filter=open", self.digestBoards,function() {
 							self.boards = null;
 							console.log("Failed to load boards");
 						});
@@ -325,6 +376,18 @@
 				    
 				    self.commitRegister = function() {
 				    	$('#modalRegister').closeModal();
+				    	$http.post("/user/create", {"id":$("#register-username").val(),
+				    		"password":$("#register-password").val(),
+				    		"trelloUserId":self.trelloUserId,
+				    		"gitHubUserId":self.gitHubUserId});
+				    }
+				    
+				    self.openLogin = function() {
+				    	$('#modalLogin').openModal();
+				    }
+				    
+				    self.commitLogin = function() {
+				    	$('#modalLogin').closeModal();
 				    }
 				});
 	</script>

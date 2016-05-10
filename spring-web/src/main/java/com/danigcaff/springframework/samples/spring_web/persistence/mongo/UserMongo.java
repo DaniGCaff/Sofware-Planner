@@ -99,7 +99,7 @@ public class UserMongo extends EntityAbstractMongo implements User {
 		return user;
 	}
 	
-	public static void insert(Map<String, String> data) {
+	public static void insert(Map<String, String> data) throws NullPointerException {
 		DBObject doc = BasicDBObjectBuilder.start()
 				.add(FIELDS.name.name(), data.get(FIELDS.name.name()))
 				.add(FIELDS.gitHubUserId.name(), data.get(FIELDS.gitHubUserId.name()))
