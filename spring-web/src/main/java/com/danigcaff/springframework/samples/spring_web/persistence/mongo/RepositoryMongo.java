@@ -6,11 +6,12 @@ import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 
 	private String name;
+	private String owner;
+	private String boardId;
 	private Boolean asoc;
-	
-	public RepositoryMongo(String id, String name) {
+
+	public RepositoryMongo(String id) {
 		super(id);
-		this.name = name;
 	}
 
 	public String getName() {
@@ -30,15 +31,23 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 		this.asoc = asoc;
 		return this;
 	}
+	
+	public String getOwner() {
+		return owner;
+	}
+
+	public Repository setOwner(String owner) {
+		this.owner = owner;
+		return this;
+	}
 
 	public String getBoardId() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.boardId;
 	}
 
 	public Repository setBoardId(String boardId) {
-		// TODO Auto-generated method stub
-		return null;
+		this.boardId = boardId;
+		return this;
 	}
 	
 	@Override
