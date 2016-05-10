@@ -17,7 +17,7 @@ public class UserMongo extends EntityAbstractMongo implements User {
 	protected String gitHubUserId;
 	protected String trelloUserId;
 	protected String password;
-	enum FIELDS {id, creation, lastModification, name, password, gitHubUserId, trelloUserId}
+	public enum FIELDS {id, creation, lastModification, name, password, gitHubUserId, trelloUserId}
 	protected static DBObject allFields = BasicDBObjectBuilder.start()
 			.add(FIELDS.id.name(), 1).add(FIELDS.creation.name(), 1).add(FIELDS.creation.name(), 1)
 			.add(FIELDS.name.name(), 1).add(FIELDS.gitHubUserId.name(), 1)
@@ -78,14 +78,16 @@ public class UserMongo extends EntityAbstractMongo implements User {
 		DBObject filter = BasicDBObjectBuilder.start().add(FIELDS.id.name(), id).get();
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.USERS);
 		DBObject result = coll.findOne(filter, allFields);
-		
-		UserMongo aux = UserMongo.parse(result);
-		this.name = aux.name;
-		this.password = aux.password;
-		this.gitHubUserId = aux.gitHubUserId;
-		this.lastModification = aux.lastModification;
-		this.creation = aux.lastModification;
-		return this;
+		if(result != null) {
+			this.name = (String) result.get(FIELDS.name.name());
+			this.password = (String) result.get(FIELDS.password.name());
+			this.gitHubUserId = (String) result.get(FIELDS.gitHubUserId.name());
+			this.trelloUserId = (String) result.get(FIELDS.trelloUserId.name());
+			this.lastModification = (String) result.get(FIELDS.lastModification.name());
+			this.creation = (String) result.get(FIELDS.creation.name());
+			return this;
+		}
+		return null;
 	}
 	
 	public static UserMongo parse(DBObject object) {
@@ -101,6 +103,7 @@ public class UserMongo extends EntityAbstractMongo implements User {
 	
 	public static void insert(Map<String, String> data) {
 		DBObject doc = BasicDBObjectBuilder.start()
+				.add(FIELDS.id.name(), data.get(FIELDS.id.name()))
 				.add(FIELDS.name.name(), data.get(FIELDS.name.name()))
 				.add(FIELDS.gitHubUserId.name(), data.get(FIELDS.gitHubUserId.name()))
 				.add(FIELDS.trelloUserId.name(), data.get(FIELDS.trelloUserId.name()))
