@@ -1,31 +1,43 @@
 package com.danigcaff.springframework.samples.spring_web.persistence.mongo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
 import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
+import com.danigcaff.springframework.samples.spring_web.persistence.User;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo.FIELDS;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 public class RepositoryMongo extends EntityAbstractMongo implements Repository {
-
+	
+	private String repoName;
 	private String repoId;
 	private String owner;
 	private String boardId;
 	private Boolean asoc;
-	public enum FIELDS {id, creation, lastModification, owner, repoId, boardId, asoc}
+	public enum FIELDS {id, repoName, creation, lastModification, owner, repoId, boardId, asoc}
 	public RepositoryMongo(String repoId) {
 		super(repoId);
 		this.repoId=repoId;
 	}
+	public String getRepoName() {
+		return repoName;
+	}
 
+	public Repository setRepoName(String repoName) {
+		this.repoName = repoName;
+		return this;
+	}
 	protected static DBObject allFields = BasicDBObjectBuilder.start()
-			.add(FIELDS.id.name(), 1).add(FIELDS.creation.name(), 1).add(FIELDS.lastModification.name(), 1)
+			.add(FIELDS.id.name(), 1).add(FIELDS.repoName.name(), 1).add(FIELDS.creation.name(), 1).add(FIELDS.lastModification.name(), 1)
 			.add(FIELDS.owner.name(), 1).add(FIELDS.repoId.name(), 1)
 			.add(FIELDS.boardId.name(), 1).add(FIELDS.asoc.name(), 1)
 			.get();
@@ -39,7 +51,9 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	}
 
 	public Boolean getAsoc() {
-		return asoc;
+		if(asoc != null)
+			return asoc;
+		return false;
 	}
 
 	public Repository setAsoc(Boolean asoc) {
@@ -69,6 +83,7 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	public void save() {
 		DBObject query = new BasicDBObject(FIELDS.repoId.name(), repoId);
 		DBObject doc = BasicDBObjectBuilder.start()
+						.add(FIELDS.repoName.name(), repoName)
 						.add(FIELDS.owner.name(), owner)
 						.add(FIELDS.repoId.name(), repoId)
 						.add(FIELDS.boardId.name(), boardId)
@@ -85,6 +100,7 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
 		DBObject result = coll.findOne(filter, allFields);
 		if(result != null) {
+			this.repoName = (String) result.get(FIELDS.repoName.name());
 			this.owner = (String) result.get(FIELDS.owner.name());
 			this.repoId = (String) result.get(FIELDS.repoId.name());
 			this.boardId = (String) result.get(FIELDS.boardId.name());
@@ -98,6 +114,7 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	
 	public static RepositoryMongo parse(DBObject object) {
 		RepositoryMongo repo = new RepositoryMongo((String)object.get(FIELDS.id.name()));
+		repo.setRepoName((String)object.get(FIELDS.repoName.name()));
 		repo.setOwner((String)object.get(FIELDS.owner.name()));
 		repo.setRepoId((String)object.get(FIELDS.repoId.name()));
 		repo.setBoardId((String)object.get(FIELDS.boardId.name()));
@@ -109,13 +126,29 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	
 	public static void insert(Map<String, String> data) {
 		DBObject doc = BasicDBObjectBuilder.start()
+				.add(FIELDS.repoName.name(), data.get(FIELDS.repoName.name()))
 				.add(FIELDS.owner.name(), data.get(FIELDS.owner.name()))
 				.add(FIELDS.repoId.name(), data.get(FIELDS.repoId.name()))
 				.add(FIELDS.boardId.name(), data.get(FIELDS.boardId.name()))
 				.add(FIELDS.creation.name(), data.get(FIELDS.creation.name()))
+				.add(FIELDS.asoc.name(), false)
+
 				.get();
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
 		coll.insert(doc);
+	}
+	
+	public static List <Repository> listAll(String user){
+		List <Repository> reposList = new ArrayList<Repository>();
+		DBObject query = new BasicDBObject("owner",user);
+		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
+		DBCursor cursor = coll.find(query);
+		if (cursor.hasNext()){
+			DBObject doc =cursor.next();
+			Repository  repository = RepositoryMongo.parse(doc);
+			reposList.add(repository);
+		}
+		return reposList;
 	}
 
 }
