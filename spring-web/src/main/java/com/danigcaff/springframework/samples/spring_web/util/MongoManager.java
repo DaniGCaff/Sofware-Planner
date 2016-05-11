@@ -14,7 +14,7 @@ public class MongoManager {
 	private Mongo client;
 	private DB database;
 	
-	public enum COLLECTIONS { AUTORIZADOS, TASKS, USERS, ASOCIADOS }
+	public enum COLLECTIONS { AUTORIZADOS, TASKS, USERS, ASOCIADOS, BOARDS}
 	
 	private MongoManager() {
 		try {
