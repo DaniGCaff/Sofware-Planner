@@ -2,9 +2,12 @@ package com.danigcaff.springframework.samples.spring_web.api.rest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.api.ReposApi;
+import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
+import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
 import com.mongodb.BasicDBObject;
@@ -29,42 +34,28 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 @RestController
-@EnableOAuth2Client
 @Order(7)
 public class ReposController implements ReposApi {
-	
-	@Value("${github.client.clientId}")
-	private String clientId;
-	@Value("${github.client.clientSecret}")
-	private String clientSecret;
-
-	@Autowired
-	OAuth2ClientContext oauth2ClientContext;
-	
 	/* (non-Javadoc)
 	 * @see com.danigcaff.springframework.samples.spring_web.api.ReposApi#listView()
 	 */
-	@RequestMapping("/repos")
-	public List<Map<String,String>> listView() {
-		
-		// TODO TIENE QUE TIRAR DEL MODELO, HAY QUE IMPLEMENTAR UN LIST O LISTALL (metodo estático)
-		GitHub gitHub = new GitHubConnectionFactory(clientId, clientSecret)
-		.createConnection(new AccessGrant(oauth2ClientContext.getAccessToken().getValue()))
-		.getApi();
-		String owner = gitHub.userOperations().getProfileId();
-		
-		List<GitHubRepo> listaRepos = gitHub.userOperations().getRepositories();
+	@RequestMapping("/repos/{owner}")
+	public List<Map<String,String>> listView(@PathVariable ("owner") String owner) {
+		List<Repository> listaRepos = RepositoryMongo.listAll(owner);
 		List<Map<String, String>> listaIdNombre = new ArrayList<Map<String,String>>();
 		
-		for(int i=0;i<listaRepos.size();i++){
+		Iterator<Repository> it = listaRepos.iterator();
+		if (it.hasNext()){
 			Map<String, String> map = new LinkedHashMap<String,String>();
-			String repoId = Long.toString(listaRepos.get(i).getId());
-			Boolean repoAsoc = isRepoAsoc(owner, repoId);
-			map.put("id", repoId);
-			map.put("name", listaRepos.get(i).getName());
-			map.put("asoc", Boolean.toString(repoAsoc));
+			Repository aux = (Repository)it.next();
+			map.put(RepositoryMongo.FIELDS.id.name(), aux.getRepoId());
+			map.put(RepositoryMongo.FIELDS.repoName.name(), aux.getRepoName());
+			map.put(RepositoryMongo.FIELDS.repoId.name(), aux.getRepoId());
+			map.put(RepositoryMongo.FIELDS.boardId.name(), aux.getBoardId());
+			map.put(RepositoryMongo.FIELDS.asoc.name(), aux.getAsoc().toString());
+			map.put(RepositoryMongo.FIELDS.owner.name(), aux.getOwner());
 			listaIdNombre.add(map);
-		}	
+		}
 		return listaIdNombre;
     }
 	

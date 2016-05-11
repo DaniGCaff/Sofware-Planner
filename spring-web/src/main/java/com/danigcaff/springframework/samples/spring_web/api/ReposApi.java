@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface ReposApi {
 
-	List<Map<String, String>> listView();
+	List<Map<String, String>> listView(String owner);
 
 	Map<String, String> asociate(String owner, String repoId, String boardId);
 

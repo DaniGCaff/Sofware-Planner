@@ -188,7 +188,7 @@
 			<h2>Tus repositorios</h2>
 			<ul class="collection" ng-show="home.repos">
 				<li class="collection-item" ng-repeat="(indice, repo) in home.repos">
-					<a><i class="tiny material-icons">work</i>{{repo.name}}</a>
+					<a><i class="tiny material-icons">work</i>{{repo.repoName}}</a>
 					<a ng-click="home.asociarRepo(repo.id)"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a>
 					<a ng-click="home.verRepo(repo.id)"  ng-show="repo.asoc=='true'" class="secondary-content"><i class="material-icons">work</i></a>
 				</li>
@@ -399,9 +399,9 @@
 				    			if(resp.data.response == "ok") {
 				    				self.name = resp.data.name;
 				    				self.authenticated = true;
-				    				$http.get("/repos").success(function(dato) {
+				    				self.id=resp.data.id;
+				    				$http.get("/repos/"+self.id).success(function(dato) {
 										self.repos = dato;
-										$scope.$update();
 									}).error(function() {
 										self.repos = null;
 									});
