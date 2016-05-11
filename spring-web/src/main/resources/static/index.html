@@ -337,6 +337,14 @@
 							self.trelloUserId = null;
 							self.trelloUsername = null;
 						});
+						
+						
+				        Trello.get("members/me/boards?filter=open", function(datos) {
+				        	self.boards = datos;
+				        },function() {
+							self.boards = null;
+							console.log("Failed to load boards");
+						});
 					}
 					
 				    self.loadBoards = function() {
@@ -381,11 +389,11 @@
 				    
 				    self.commitRegister = function() {
 				    	$('#modalRegister').closeModal();
-				    	$http.post("/user/create", {"id":$("#register-username").val(),
+				    	$http.post("/user/create", {"user":{"id":$("#register-username").val(),
 				    		"password":$("#register-password").val(),
 				    		"name":$("#register-name").val(),
 				    		"trelloUserId":self.trelloUserId,
-				    		"gitHubUserId":self.gitHubUserId});
+				    		"gitHubUserId":self.gitHubUserId}, "boardData" : self.boards});
 				    }
 				    
 				    self.openLogin = function() {

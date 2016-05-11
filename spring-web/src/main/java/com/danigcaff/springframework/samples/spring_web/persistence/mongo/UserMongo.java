@@ -116,4 +116,9 @@ public class UserMongo extends EntityAbstractMongo implements User {
 		coll.insert(doc);
 	}
 
+	public static void insert(DBObject dbObject) {
+		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.USERS);
+		coll.insert(dbObject);
+	}
+
 }

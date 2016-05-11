@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -20,8 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.api.UserApi;
 import com.danigcaff.springframework.samples.spring_web.persistence.User;
+import com.danigcaff.springframework.samples.spring_web.persistence.mongo.BoardMongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 @RestController
 @EnableOAuth2Client
@@ -43,31 +49,38 @@ public class UserController implements UserApi {
 	}
 	
 	@RequestMapping(value = "/user/create", method = RequestMethod.POST)
-	public Map<String, String> createUser(@RequestBody Map<String, String> userData, @RequestBody Map<String, String> trelloBoardData) {
+	public Map<String, String> createUser(@RequestBody String data) {
+		JSONObject json = new JSONObject(data);
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		try{
-			UserMongo.insert(userData);
+			UserMongo.insert((DBObject) (JSON.parse(json.getJSONObject("user").toString())));
 			map.put("response", "ok");
 			
 			GitHub gitHub = new GitHubConnectionFactory(clientId, clientSecret)
 					.createConnection(new AccessGrant(oauth2ClientContext.getAccessToken().getValue()))
 					.getApi();
-			List<GitHubRepo> listaRepos = gitHub.userOperations().getRepositories();
 			
-			for(int i=0;i<listaRepos.size();i++){
+			List<GitHubRepo> listaRepos = gitHub.userOperations().getRepositories();
+			for(GitHubRepo repo : listaRepos) {
 				Map<String, String> repoMap = new LinkedHashMap<String,String>();
-				String repoId = Long.toString(listaRepos.get(i).getId());
-				String repoName = listaRepos.get(i).getName();
+				String repoId = Long.toString(repo.getId());
+				String repoName = repo.getName();
 				repoMap.put(RepositoryMongo.FIELDS.id.name(), repoId);
 				repoMap.put(RepositoryMongo.FIELDS.repoId.name(), repoId);
 				repoMap.put(RepositoryMongo.FIELDS.repoName.name(), repoName);
 				repoMap.put(RepositoryMongo.FIELDS.boardId.name(), "");
-				repoMap.put(RepositoryMongo.FIELDS.owner.name(), userData.get(UserMongo.FIELDS.id.name()));
+				repoMap.put(RepositoryMongo.FIELDS.owner.name(), json.getJSONObject("user").get(UserMongo.FIELDS.id.name()).toString());
 				repoMap.put(RepositoryMongo.FIELDS.asoc.name(), "false");
 				RepositoryMongo.insert(repoMap);
 			}
 			
-			
+			JSONArray boardsArray = json.getJSONArray("boardData");
+			for (int i = 0; i < boardsArray.length(); i++) {
+				Map<String, String> mapBoards = new LinkedHashMap<String, String>();
+				mapBoards.put(BoardMongo.FIELDS.id.name(), boardsArray.getJSONObject(i).get("id").toString());
+				mapBoards.put(BoardMongo.FIELDS.boardName.name(), boardsArray.getJSONObject(i).get("name").toString());
+				mapBoards.put(BoardMongo.FIELDS.owner.name(), json.getJSONObject("user").get(UserMongo.FIELDS.trelloUserId.name()).toString());
+			}
 		}
 		catch (Exception ex) {
 			map.put("response", ex.getMessage());
