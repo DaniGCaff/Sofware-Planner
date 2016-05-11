@@ -50,6 +50,10 @@ public class UserController implements UserApi {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		try{
 			User usuario = new UserMongo(json.get("id"), json.get("password"));
+			map.put("id", usuario.getId());
+			map.put("name", usuario.getName());
+			map.put("gitHubUserId", usuario.getGitHubUserId());
+			map.put("trelloUserId", usuario.getTrelloUserId());
 			map.put("response", "ok");
 		}
 		catch (Exception ex) {

@@ -26,7 +26,7 @@
 				<li ng-show="home.authenticated"><a href="/">Ajustes</a></li>
 				<li ng-show="home.authenticated"><button
 						ng-click="home.logout()" class="btn btn-primary">
-						Logout (<span ng-bind="home.user"></span>)
+						Logout (<span ng-bind="home.name"></span>)
 					</button></li>
 			</ul>
 		</div>
@@ -260,6 +260,7 @@
 								self.authenticated = true;
 								$http.get("/repos").success(function(dato) {
 									self.repos = dato;
+									$scope.$update();
 								}).error(function() {
 									self.repos = null;
 								});
@@ -395,10 +396,15 @@
 				    	$('#modalLogin').closeModal();
 				    	$http.post("/user/login", {"id":$("#login-username").val(),
 				    		"password":$("#login-password").val()}).then(function successCallback(resp) {
-				    			console.log(resp);
-				    			self.resp = resp;
 				    			if(resp.data.response == "ok") {
+				    				self.name = resp.data.name;
 				    				self.authenticated = true;
+				    				$http.get("/repos").success(function(dato) {
+										self.repos = dato;
+										$scope.$update();
+									}).error(function() {
+										self.repos = null;
+									});
 				    			} else {
 				    				alert(resp.data.response);
 				    			}

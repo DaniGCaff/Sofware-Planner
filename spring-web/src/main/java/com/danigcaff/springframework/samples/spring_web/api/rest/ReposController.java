@@ -47,6 +47,7 @@ public class ReposController implements ReposApi {
 	@RequestMapping("/repos")
 	public List<Map<String,String>> listView() {
 		
+		// TODO TIENE QUE TIRAR DEL MODELO, HAY QUE IMPLEMENTAR UN LIST O LISTALL (metodo estático)
 		GitHub gitHub = new GitHubConnectionFactory(clientId, clientSecret)
 		.createConnection(new AccessGrant(oauth2ClientContext.getAccessToken().getValue()))
 		.getApi();
