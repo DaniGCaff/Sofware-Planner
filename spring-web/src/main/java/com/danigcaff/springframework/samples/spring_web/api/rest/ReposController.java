@@ -7,17 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.websocket.server.PathParam;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.social.github.api.GitHub;
-import org.springframework.social.github.api.GitHubRepo;
-import org.springframework.social.github.connect.GitHubConnectionFactory;
-import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +16,6 @@ import com.danigcaff.springframework.samples.spring_web.api.ReposApi;
 import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
-import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -36,9 +25,6 @@ import com.mongodb.DBObject;
 @RestController
 @Order(7)
 public class ReposController implements ReposApi {
-	/* (non-Javadoc)
-	 * @see com.danigcaff.springframework.samples.spring_web.api.ReposApi#listView()
-	 */
 	@RequestMapping("/repos/{owner}")
 	public List<Map<String,String>> listView(@PathVariable ("owner") String owner) {
 		List<Repository> listaRepos = RepositoryMongo.listAll(owner);
@@ -58,21 +44,7 @@ public class ReposController implements ReposApi {
 		}
 		return listaIdNombre;
     }
-	
-	private boolean isRepoAsoc(String owner, String repoId) {
-		DBCollection coll = MongoManager.getManager().getCollection(COLLECTIONS.AUTORIZADOS);
-		DBObject queryDoc = new BasicDBObject("owner", owner)
-								.append("repoId", repoId);
-		DBObject result = coll.findOne(queryDoc);
-		if(result != null) {
-			return true;
-		}
-		return false;
-	}
 
-	/* (non-Javadoc)
-	 * @see com.danigcaff.springframework.samples.spring_web.api.ReposApi#asociate(java.lang.String, java.lang.String, java.lang.String)
-	 */
 	@RequestMapping("/repos/asociar/{owner}/{repoId}/{boardId}")
 	public Map <String, String> asociate(@PathVariable("owner") String owner, @PathVariable("repoId") String repoId, @PathVariable("boardId") String boardId){
 		
@@ -95,14 +67,8 @@ public class ReposController implements ReposApi {
 		return map;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.danigcaff.springframework.samples.spring_web.api.ReposApi#list(java.lang.String)
-	 */
 	@RequestMapping("/repos/board/{repoId}")
 	public Map <String, String> list(@PathVariable("repoId") String repoId){
-		/*
-		 * A partir del repoId se debe conseguir el boardId en la collection de autorizados.
-		 */
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		String response = "ok";
 		DB database = MongoManager.getManager().getDatabase();

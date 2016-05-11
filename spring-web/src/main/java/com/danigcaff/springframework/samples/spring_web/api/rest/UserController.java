@@ -1,7 +1,6 @@
 package com.danigcaff.springframework.samples.spring_web.api.rest;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubRepo;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.api.UserApi;
-import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 import com.danigcaff.springframework.samples.spring_web.persistence.User;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo;
