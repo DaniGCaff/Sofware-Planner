@@ -1,4 +1,4 @@
-package com.danigcaff.springframework.samples.spring_rest_listener;
+package com.danigcaff.springframework.samples.spring_rest_listener.repoHooksListener;
 
 import java.lang.reflect.Array;
 import java.net.UnknownHostException;
@@ -30,7 +30,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
 
 @RestController
-public class HookListener {
+public class GitHubHookListener {
 	private static String TYPE = "event_type";
 	private static String PUSH_TYPE = "pusher";
 	private static String MEMBER_TYPE = "member";
@@ -43,9 +43,8 @@ public class HookListener {
 		return json;
 	}
 
-	@RequestMapping(value = "/listen/github", method = RequestMethod.POST)
-	public void gitHubListener(@RequestBody String evento) {
-		//TODO Comprobar que la url del repositorio existe en la colección de autorizados.
+	@RequestMapping(value = "/listen/repos/github", method = RequestMethod.POST)
+	public void repoListener(@RequestBody String evento) {
 		System.out.println(evento);
 		JSONObject json = new JSONObject(evento);
 		json = eventClasification(json);
@@ -57,53 +56,52 @@ public class HookListener {
 		}
 		DBCollection coll = database.getCollection((String) json.get(TYPE));
 		coll.insert(doc);
-		
-		if (json.has(PUSH_TYPE)){
-			ArrayList<Map <String,String>> mapCommitTask = getDataFromCommit(json);
+
+		if (json.has(PUSH_TYPE)) {
+			ArrayList<Map<String, String>> mapCommitTask = getDataFromCommit(json);
 			Iterator<Map<String, String>> iterador = mapCommitTask.iterator();
-			while(iterador.hasNext()) {
+			while (iterador.hasNext()) {
 				Map<String, String> asocCommitTask = iterador.next();
-				BasicDBObject query = new BasicDBObject("shortUrl",asocCommitTask.get("urlTask"));
+				BasicDBObject query = new BasicDBObject("shortUrl", asocCommitTask.get("urlTask"));
 				DBCollection collTask = database.getCollection("taskPrueba");
 				DBObject docResult = collTask.findOne(query);
-				if(docResult != null) {
+				if (docResult != null) {
 					String idTarjeta = docResult.get("id").toString();
 					if (!database.collectionExists("ASOCIADOS")) {
 						DBObject options = BasicDBObjectBuilder.start().add("capped", false).get();
 						database.createCollection("ASOCIADOS", options);
 					}
 					DBCollection collAsociado = database.getCollection("ASOCIADOS");
-					BasicDBObject docAsociado = new BasicDBObject("idTarjeta",idTarjeta)
-												.append("idCommit", asocCommitTask.get("idCommit"));
+					BasicDBObject docAsociado = new BasicDBObject("idTarjeta", idTarjeta).append("idCommit",
+							asocCommitTask.get("idCommit"));
 					collAsociado.insert(docAsociado);
 				} else
 					System.out.println("No hay resultados...");
 			}
-			
+
 		}
 	}
-	
-	public ArrayList<Map<String, String>> getDataFromCommit(JSONObject json){
-		ArrayList<Map <String,String>> mapUrlIds = new ArrayList<Map <String,String>>();
+
+	private ArrayList<Map<String, String>> getDataFromCommit(JSONObject json) {
+		ArrayList<Map<String, String>> mapUrlIds = new ArrayList<Map<String, String>>();
 		String url;
 		String id;
 		String message;
-		JSONArray commitsArray = (JSONArray)json.get("commits");
+		JSONArray commitsArray = (JSONArray) json.get("commits");
 		for (int i = 0; i < commitsArray.length(); i++) {
-		    JSONObject rec = commitsArray.getJSONObject(i);
-		    id = rec.getString("id");
-		    message = rec.getString("message");
-		    
-		    	Pattern pattern = Pattern.compile("@https://trello.com/c/\\w+@");
-		    	Matcher matcher = pattern.matcher(message);
-		    	while (matcher.find()){
-		    		Map <String, String> map = new HashMap <String, String>();
-		    	       url = matcher.group().substring(1, matcher.group().length()-1);
-		    	       map.put("idCommit", id);
-		    	       map.put("urlTask", url);
-		    	       mapUrlIds.add(map);
-		    	}
+			JSONObject rec = commitsArray.getJSONObject(i);
+			id = rec.getString("id");
+			message = rec.getString("message");
+			Pattern pattern = Pattern.compile("@https://trello.com/c/\\w+@");
+			Matcher matcher = pattern.matcher(message);
+			while (matcher.find()) {
+				Map<String, String> map = new HashMap<String, String>();
+				url = matcher.group().substring(1, matcher.group().length() - 1);
+				map.put("idCommit", id);
+				map.put("urlTask", url);
+				mapUrlIds.add(map);
+			}
 		}
-  	  return mapUrlIds;		
+		return mapUrlIds;
 	}
 }
