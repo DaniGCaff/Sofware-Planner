@@ -97,12 +97,12 @@ public class BoardMongo extends EntityAbstractMongo implements Board{
 		coll.insert(doc);
 	}
 	
-	public static List <Board> listAll(String id){
+	public static List <Board> listAll(String owner){
 		List <Board> boardsList = new ArrayList<Board>();
-		DBObject query = new BasicDBObject("id",id);
+		DBObject query = new BasicDBObject("owner",owner);
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.BOARDS);
 		DBCursor cursor = coll.find(query);
-		if (cursor.hasNext()){
+		while (cursor.hasNext()){
 			DBObject doc =cursor.next();
 			Board  board = BoardMongo.parse(doc);
 			boardsList.add(board);

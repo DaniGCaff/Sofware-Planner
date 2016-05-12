@@ -48,19 +48,10 @@ public class ReposController implements ReposApi {
 	@RequestMapping("/repos/asociar/{owner}/{repoId}/{boardId}")
 	public Map <String, String> asociate(@PathVariable("owner") String owner, @PathVariable("repoId") String repoId, @PathVariable("boardId") String boardId){
 		
-		DB database = MongoManager.getManager().getDatabase();
-		if (!database.collectionExists(MongoManager.COLLECTIONS.AUTORIZADOS.name())) {
-			DBObject options = BasicDBObjectBuilder.start().add("capped", false).get();
-			database.createCollection(MongoManager.COLLECTIONS.AUTORIZADOS.name(), options);
-		}
-		DBCollection coll = database.getCollection(MongoManager.COLLECTIONS.AUTORIZADOS.name());
-		
-		DBObject asoc = new BasicDBObject();
-		asoc.put("owner", owner);
-		asoc.put("repoId", repoId);
-		asoc.put("boardId", boardId);
-		asoc.put("creation", new Date().toString());
-		coll.insert(asoc);
+		Repository repo = new RepositoryMongo(repoId);
+		repo.setAsoc(true);
+		repo.setBoardId(boardId);
+		repo.save();
 		
 		Map<String,String> map =new LinkedHashMap<String, String>();
 		map.put("response", "ok");

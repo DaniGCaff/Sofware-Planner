@@ -148,7 +148,7 @@
       <h4>Modal Header</h4>
 	   <input name="id_repo" type="hidden" id="id_repo"/>
 	    <div class="collection">
-	     <a ng-click="home.loginIntoTrello()" class="collection-item">Trello</a>
+	     <a ng-click="home.asociarConTrello()" class="collection-item">Trello</a>
 	     <a href="#!" class="collection-item">Google Calendar</a>
 	    </div>      
 	</div>
@@ -164,7 +164,7 @@
 			<h2>Tus tableros de trello</h2>
 			<ul class="collection" ng-show="home.boards">
 				<li class="collection-item" ng-repeat="(indice, board) in home.boards">
-					<a><i class="tiny material-icons">work</i>{{board.name}}</a>
+					<a><i class="tiny material-icons">work</i>{{board.boardName}}</a>
 					<a ng-click="home.asociarBoard(board.id)" class="secondary-content"><i class="material-icons">send</i></a>
 				</li>
 			</ul>
@@ -359,20 +359,15 @@
 							console.log("Failed to load boards");
 						});
 					}
-					
-				    self.loadBoards = function() {
-				        //Get the users boards
-				        Trello.get("members/me/boards?filter=open", self.digestBoards,function() {
-							self.boards = null;
-							console.log("Failed to load boards");
-						});
-				    }
 				    
-				    self.digestBoards = function(datos) {
-				    	self.boards = datos;
+				    self.asociarConTrello = function() {
 				    	self.estado = 2;
 	                	$('#modalAsociar').closeModal();
-	                	$scope.$apply();
+	                	$http.get("/boards/" + self.trelloUserId).success(function(boards) {
+							self.boards = boards;
+						}).error(function() {
+							alert("ERROR");
+						});
 					}
 				    
 				    self.listTasks = function() {
@@ -421,6 +416,8 @@
 				    				self.name = resp.data.name;
 				    				self.authenticated = true;
 				    				self.id=resp.data.id;
+				    				self.trelloUserId = resp.data.trelloUserId;
+				    				self.gitHubUserId = resp.data.gitHubUserId;
 				    				$http.get("/repos/"+self.id).success(function(dato) {
 										self.repos = dato;
 									}).error(function() {
