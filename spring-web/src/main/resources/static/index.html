@@ -302,7 +302,7 @@
 					
 					self.requestAsoc = function() {
 						if(self.requestAsocRepo != null && self.requestAsocBoard != null) {
-							$http.get("/repos/asociar/" + self.user + "/" + self.requestAsocRepo+ "/" + self.requestAsocBoard).success(function(dato) {
+							$http.get("/repos/asociar/" + self.id + "/" + self.requestAsocRepo+ "/" + self.requestAsocBoard).success(function(dato) {
 								if(dato.response == "ok") {
 									self.requestAsocRepo = null;
 									self.requestAsocBoard = null;

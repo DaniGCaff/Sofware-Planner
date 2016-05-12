@@ -141,7 +141,7 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 		DBObject query = new BasicDBObject("owner",user);
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
 		DBCursor cursor = coll.find(query);
-		if (cursor.hasNext()){
+		while (cursor.hasNext()){
 			DBObject doc =cursor.next();
 			Repository  repository = RepositoryMongo.parse(doc);
 			reposList.add(repository);

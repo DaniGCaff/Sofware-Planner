@@ -31,7 +31,7 @@ public class ReposController implements ReposApi {
 		List<Map<String, String>> listaIdNombre = new ArrayList<Map<String,String>>();
 		
 		Iterator<Repository> it = listaRepos.iterator();
-		if (it.hasNext()){
+		while (it.hasNext()) {
 			Map<String, String> map = new LinkedHashMap<String,String>();
 			Repository aux = (Repository)it.next();
 			map.put(RepositoryMongo.FIELDS.id.name(), aux.getRepoId());
