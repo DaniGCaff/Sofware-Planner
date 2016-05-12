@@ -341,6 +341,19 @@
 						
 				        Trello.get("members/me/boards?filter=open", function(datos) {
 				        	self.boards = datos;
+				        	self.tasks = [];
+				        	for(var i = 0; i < self.boards.length; i++) {
+			        			var board = self.boards[i];
+				        		Trello.get("boards/"+board.id+"/cards", function(tasks) {
+				        			for(var j = 0; j < tasks.length; j++) {
+				        				var task = tasks[i];
+					   					var aux = {id: task.id, creation: "", lastModification: "", dateLastActivity: task.dateLastActivity,
+					   							idBoard: task.idBoard, idList: task.idList, name: task.name,
+					   							pos: task.pos, due: task.due, shortUrl: task.shortUrl};
+					   					self.tasks.push(aux);
+				        			}
+				        		});
+				        	}
 				        },function() {
 							self.boards = null;
 							console.log("Failed to load boards");
@@ -393,7 +406,7 @@
 				    		"password":$("#register-password").val(),
 				    		"name":$("#register-name").val(),
 				    		"trelloUserId":self.trelloUserId,
-				    		"gitHubUserId":self.gitHubUserId}, "boardData" : self.boards});
+				    		"gitHubUserId":self.gitHubUserId}, "boardData" : self.boards, "taskData" : self.tasks});
 				    }
 				    
 				    self.openLogin = function() {

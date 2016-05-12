@@ -24,6 +24,7 @@ import com.danigcaff.springframework.samples.spring_web.api.UserApi;
 import com.danigcaff.springframework.samples.spring_web.persistence.User;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.BoardMongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
+import com.danigcaff.springframework.samples.spring_web.persistence.mongo.TaskMongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -80,6 +81,23 @@ public class UserController implements UserApi {
 				mapBoards.put(BoardMongo.FIELDS.id.name(), boardsArray.getJSONObject(i).get("id").toString());
 				mapBoards.put(BoardMongo.FIELDS.boardName.name(), boardsArray.getJSONObject(i).get("name").toString());
 				mapBoards.put(BoardMongo.FIELDS.owner.name(), json.getJSONObject("user").get(UserMongo.FIELDS.trelloUserId.name()).toString());
+				BoardMongo.insert(mapBoards);
+			}
+			
+			JSONArray tasksArray = json.getJSONArray("taskData");
+			for (int i = 0; i < tasksArray.length(); i++) {
+				Map<String, String> mapTasks = new LinkedHashMap<String, String>();
+				mapTasks.put(TaskMongo.FIELDS.id.name(), tasksArray.getJSONObject(i).get("id").toString());
+				mapTasks.put(TaskMongo.FIELDS.creation.name(), tasksArray.getJSONObject(i).get("creation").toString());
+				mapTasks.put(TaskMongo.FIELDS.lastModification.name(), tasksArray.getJSONObject(i).get("lastModification").toString());
+				mapTasks.put(TaskMongo.FIELDS.dateLastActivity.name(), tasksArray.getJSONObject(i).get("dateLastActivity").toString());
+				mapTasks.put(TaskMongo.FIELDS.idBoard.name(), tasksArray.getJSONObject(i).get("idBoard").toString());
+				mapTasks.put(TaskMongo.FIELDS.idList.name(), tasksArray.getJSONObject(i).get("idList").toString());
+				mapTasks.put(TaskMongo.FIELDS.name.name(), tasksArray.getJSONObject(i).get("name").toString());
+				mapTasks.put(TaskMongo.FIELDS.pos.name(), tasksArray.getJSONObject(i).get("pos").toString());
+				mapTasks.put(TaskMongo.FIELDS.due.name(), tasksArray.getJSONObject(i).get("due").toString());
+				mapTasks.put(TaskMongo.FIELDS.shortUrl.name(), tasksArray.getJSONObject(i).get("shortUrl").toString());
+				TaskMongo.insert(mapTasks);
 			}
 		}
 		catch (Exception ex) {
