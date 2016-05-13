@@ -13,9 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.danigcaff.springframework.samples.spring_web.persistence.Board;
-import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.BoardMongo;
-import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
 
 import junit.framework.TestCase;
 

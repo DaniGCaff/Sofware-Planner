@@ -6,8 +6,6 @@ import java.util.Map;
 
 import com.danigcaff.springframework.samples.spring_web.persistence.Board;
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
-import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
-import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo.FIELDS;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
 import com.mongodb.BasicDBObject;

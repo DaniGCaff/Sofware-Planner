@@ -31,7 +31,9 @@ public class RepositoryMongoTest extends TestCase {
 		Map <String, String> repo = new LinkedHashMap <String, String>();
 		repo.put(RepositoryMongo.FIELDS.owner.name(), "DaniGCaff");
 		repo.put(RepositoryMongo.FIELDS.repoId.name(), "55555R");
+		repo.put(RepositoryMongo.FIELDS.id.name(), "55555R");
 		repo.put(RepositoryMongo.FIELDS.boardId.name(), "6666B");
+		repo.put(RepositoryMongo.FIELDS.repoName.name(), "Un repositorio");
 		repo.put(RepositoryMongo.FIELDS.creation.name(), aux);
 		
 		RepositoryMongo.insert(repo);
@@ -42,7 +44,14 @@ public class RepositoryMongoTest extends TestCase {
         assertEquals("Repo distinto", "55555R", repositorioLeer.getRepoId());
         assertEquals("Board distinto", "6666B", repositorioLeer.getBoardId());
         assertEquals("Creation distinto", aux, repositorioLeer.getCreationDate());
-
+        assertEquals("Asoc distinto", (Boolean)false, repositorioLeer.getAsoc());
+        
+        repositorioLeer.setAsoc(true);
+        repositorioLeer.save();
+        
+        Repository otroRepo = new RepositoryMongo("55555R");
+        assertEquals("Hay algun problema al actualizar", "DaniGCaff", otroRepo.getOwner());
+        assertTrue("Hay algun problema al actualizar", otroRepo.getAsoc());
     }
 
 }

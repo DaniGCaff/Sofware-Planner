@@ -79,13 +79,15 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	
 	@Override
 	public void save() {
-		DBObject query = new BasicDBObject(FIELDS.repoId.name(), repoId);
+		DBObject query = new BasicDBObject(FIELDS.id.name(), id);
 		DBObject doc = BasicDBObjectBuilder.start()
+						.add(FIELDS.id.name(), id)
 						.add(FIELDS.repoName.name(), repoName)
 						.add(FIELDS.owner.name(), owner)
 						.add(FIELDS.repoId.name(), repoId)
 						.add(FIELDS.boardId.name(), boardId)
 						.add(FIELDS.creation.name(), creation)
+						.add(FIELDS.asoc.name(), asoc)
 						.get();
 		DBCollection coll = MongoManager.getManager().getCollection(COLLECTIONS.AUTORIZADOS);
 		coll.update(query, doc);
@@ -94,9 +96,9 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 
 	@Override
 	public Entity readById() {
-		DBObject filter = BasicDBObjectBuilder.start().add(FIELDS.repoId.name(), id).get();
+		DBObject filter = BasicDBObjectBuilder.start().add(FIELDS.id.name(), id).get();
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
-		DBObject result = coll.findOne(filter, allFields);
+		DBObject result = coll.findOne(filter);
 		if(result != null) {
 			this.repoName = (String) result.get(FIELDS.repoName.name());
 			this.owner = (String) result.get(FIELDS.owner.name());
@@ -124,13 +126,13 @@ public class RepositoryMongo extends EntityAbstractMongo implements Repository {
 	
 	public static void insert(Map<String, String> data) {
 		DBObject doc = BasicDBObjectBuilder.start()
+				.add(FIELDS.id.name(), data.get(FIELDS.repoId.name()))
 				.add(FIELDS.repoName.name(), data.get(FIELDS.repoName.name()))
 				.add(FIELDS.owner.name(), data.get(FIELDS.owner.name()))
 				.add(FIELDS.repoId.name(), data.get(FIELDS.repoId.name()))
 				.add(FIELDS.boardId.name(), data.get(FIELDS.boardId.name()))
 				.add(FIELDS.creation.name(), data.get(FIELDS.creation.name()))
-				.add(FIELDS.asoc.name(), false)
-
+				.add(FIELDS.asoc.name(),(Boolean)false)
 				.get();
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.AUTORIZADOS);
 		coll.insert(doc);
