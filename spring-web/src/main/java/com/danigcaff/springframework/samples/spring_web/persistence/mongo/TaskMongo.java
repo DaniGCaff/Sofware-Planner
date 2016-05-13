@@ -1,5 +1,7 @@
 package com.danigcaff.springframework.samples.spring_web.persistence.mongo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
@@ -9,6 +11,7 @@ import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLEC
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 public class TaskMongo extends EntityAbstractMongo implements Task {
@@ -207,6 +210,19 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 				.get();
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.TASKS);
 		coll.insert(doc);
+	}
+	
+	public static List <Task> listAll(String boardId){
+		List <Task> tasksList = new ArrayList<Task>();
+		DBObject query = new BasicDBObject(TaskMongo.FIELDS.idBoard.name(), boardId);
+		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.TASKS);
+		DBCursor cursor = coll.find(query);
+		while (cursor.hasNext()){
+			DBObject doc =cursor.next();
+			Task  board = TaskMongo.parse(doc);
+			tasksList.add(board);
+		}
+		return tasksList;
 	}
 
 }

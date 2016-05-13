@@ -8,9 +8,7 @@
 		<artifactId>spring-samples-master</artifactId>
 		<version>0.0.1.SNAPSHOT</version>
 	</parent>
-	<groupId>com.danigcaff.springframework.samples</groupId>
 	<artifactId>spring-web</artifactId>
-	<version>0.0.1.SNAPSHOT</version>
 	<name>spring-web</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -21,8 +19,7 @@
 		<dependency>
 	        <groupId>org.springframework.social</groupId>
 	        <artifactId>spring-social-core</artifactId>
-	        <version>1.1.4.RELEASE</version>
-	    </dependency>
+	        </dependency>
 		<dependency>
 			<groupId>com.danigcaff.springframework.social</groupId>
 			<artifactId>social-github</artifactId>

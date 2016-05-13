@@ -26,7 +26,6 @@ import com.danigcaff.springframework.samples.spring_web.persistence.mongo.BoardM
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.TaskMongo;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.UserMongo;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 

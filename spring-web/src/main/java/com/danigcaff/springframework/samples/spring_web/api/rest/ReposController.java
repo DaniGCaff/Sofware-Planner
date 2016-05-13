@@ -1,7 +1,6 @@
 package com.danigcaff.springframework.samples.spring_web.api.rest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,7 +15,6 @@ import com.danigcaff.springframework.samples.spring_web.api.ReposApi;
 import com.danigcaff.springframework.samples.spring_web.persistence.Repository;
 import com.danigcaff.springframework.samples.spring_web.persistence.mongo.RepositoryMongo;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
-import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;

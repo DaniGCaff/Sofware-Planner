@@ -213,12 +213,12 @@
 		<div class="row">
 		   <div class="col s4">
 			   <div class="scrollable collection">
-		        <a href="#!" class="collection-item" ng-repeat="task in home.tasks">{{task.name}}</a>
+		        <a href="#!" class="collection-item" ng-repeat="task in home.selectedTasks">{{task.name}}</a>
 		      </div>
 		  </div>
 		  <div class="col s8">
 			   <div class="scrollable collection">
-				<a href="#!" class="collection-item" ng-repeat="commit in home.commits">{{commit.message}}</a>
+				<a href="#!" class="collection-item" ng-repeat="commit in home.selectedCommits">{{commit.message}}</a>
 		      </div>
 		  </div>
 		</div>
@@ -374,10 +374,9 @@
 				    	$http.get("/repos/board/" + self.requestAsocRepo).success(function(dato) {
 							if(dato.response == "ok") {
 								self.requestAsocBoard = dato.boardId;
-						    	Trello.get("/boards/"+ dato.boardId +"/cards", self.digestTasks, function() {
-						    		self.tasks = null;
-						    		console.log("Failed to load tasks");
-						    	});
+								$http.get("/tasks/" + self.requestAsocBoard).success(function(taskResult) {
+									self.selectedTasks = taskResult;
+								});
 							} else {
 								alert(dato.response)
 							}

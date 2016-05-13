@@ -1,6 +1,9 @@
 package com.danigcaff.springframework.samples.spring_web.api.rest;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.core.annotation.Order;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.api.TasksApi;
+import com.danigcaff.springframework.samples.spring_web.persistence.Task;
+import com.danigcaff.springframework.samples.spring_web.persistence.mongo.TaskMongo;
 
 @RestController
 @EnableOAuth2Client
@@ -24,5 +29,25 @@ public class TasksController implements TasksApi {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("response", "ok");
 		return map;
+	}
+	
+	@RequestMapping("/tasks/{boardId}")
+	public List<Map<String,String>> listTasks(@PathVariable("boardId") String boardId){
+		List<Task> listaRepos = TaskMongo.listAll(boardId);
+		List<Map<String, String>> listaIdNombre = new ArrayList<Map<String,String>>();
+		
+		Iterator<Task> it = listaRepos.iterator();
+		while (it.hasNext()) {
+			Map<String, String> map = new LinkedHashMap<String,String>();
+			Task aux = (Task)it.next();
+			map.put(TaskMongo.FIELDS.id.name(), aux.getId());
+			map.put(TaskMongo.FIELDS.idBoard.name(), aux.getIdBoard());
+			map.put(TaskMongo.FIELDS.due.name(), aux.getDue());
+			map.put(TaskMongo.FIELDS.name.name(), aux.getName());
+			map.put(TaskMongo.FIELDS.shortUrl.name(), aux.getShortUrl());
+			map.put(TaskMongo.FIELDS.creation.name(), aux.getCreationDate());
+			listaIdNombre.add(map);
+		}
+		return listaIdNombre;
 	}
 }
