@@ -50,4 +50,10 @@ public class TasksController implements TasksApi {
 		}
 		return listaIdNombre;
 	}
+	
+	@RequestMapping("/tasks/commits/{taskId}")
+	public List<Map<String,String>> listView(@PathVariable ("taskId") String taskId) {
+		List<Map<String,String>> listaCommits = TaskMongo.listCommitsFor(taskId);
+		return listaCommits;
+    }
 }

@@ -105,6 +105,7 @@ public class UserMongo extends EntityAbstractMongo implements User {
 	}
 	
 	public static void insert(Map<String, String> data) throws NullPointerException {
+		
 		DBObject doc = BasicDBObjectBuilder.start()
 				.add(FIELDS.id.name(), data.get(FIELDS.id.name()))
 				.add(FIELDS.name.name(), data.get(FIELDS.name.name()))

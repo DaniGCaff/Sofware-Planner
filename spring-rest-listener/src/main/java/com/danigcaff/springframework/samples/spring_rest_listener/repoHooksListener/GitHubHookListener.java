@@ -1,7 +1,5 @@
 package com.danigcaff.springframework.samples.spring_rest_listener.repoHooksListener;
 
-import java.lang.reflect.Array;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,11 +9,9 @@ import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
@@ -23,10 +19,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
 
 @RestController
@@ -67,14 +60,18 @@ public class GitHubHookListener {
 				DBObject docResult = collTask.findOne(query);
 				if (docResult != null) {
 					String idTarjeta = docResult.get("id").toString();
-					if (!database.collectionExists("ASOCIADOS")) {
+					if (!database.collectionExists("TASKS")) {
 						DBObject options = BasicDBObjectBuilder.start().add("capped", false).get();
-						database.createCollection("ASOCIADOS", options);
+						database.createCollection("TASKS", options);
 					}
-					DBCollection collAsociado = database.getCollection("ASOCIADOS");
-					BasicDBObject docAsociado = new BasicDBObject("idTarjeta", idTarjeta).append("idCommit",
-							asocCommitTask.get("idCommit"));
-					collAsociado.insert(docAsociado);
+					DBCollection collAsociado = database.getCollection("TASKS");
+					DBObject updateDoc = new BasicDBObject();
+					JSONArray arrayCommits = json.getJSONArray("commits");
+					for(int i = 0; i < arrayCommits.length(); i++) {
+						updateDoc.put("$push", new BasicDBObject("commits", (DBObject) (JSON.parse(arrayCommits.get(i).toString()))));
+						DBObject filter = new BasicDBObject("id", idTarjeta);
+						collAsociado.update(filter, updateDoc);
+					}
 				} else
 					System.out.println("No hay resultados...");
 			}

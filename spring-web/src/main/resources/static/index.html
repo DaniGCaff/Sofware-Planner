@@ -1,249 +1,37 @@
-<html>
+<html ng-app="softwarePlannerApp">
 <head>
-<meta charset="utf-8" />
-<link href="http://fonts.googleapis.com/icon?family=Material+Icons"
-	rel="stylesheet">
-<!--Import materialize.css-->
-<link type="text/css" rel="stylesheet"
-	href="/webjars/materializecss/css/materialize.min.css"
-	media="screen,projection" />
-	
-	<style>
-	.scrollable {
-		height: 250px;
-		overflow:auto;
-	}
-	</style>
+	<meta charset="utf-8" />
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="/webjars/materializecss/css/materialize.min.css" media="screen,projection" />
+	<link type="text/css" rel="stylesheet" href="/css/app.css"/>
 	
 	<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
 	<script type="text/javascript"src="/webjars/materializecss/materialize.min.js"></script>
 	<script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
 	<script type="text/javascript" src="/webjars/angular-route/angular-route.min.js"></script>
-	<script type="text/javascript" src="/js/app.js"></script>
 	<script src="https://api.trello.com/1/client.js?key=3ced367c03efe99a64b0b83fac6fa077"></script>
 </head>
-<body ng-app="appSoftwarePlanner" ng-controller="HomeController as home">
-
+<body>
 	<nav>
 		<div class="nav-wrapper">
-			<a href="#" class="brand-logo"><i class="large material-icons">insert_chart</i></a>
-			<a href="#" class="brand-logo center">Software Planner</a>
-			<ul id="nav-mobile" class="right hide-on-med-and-down">
-				<li><a href="/">Inicio</a></li>
-				<li ng-show="home.authenticated"><a href="/">Ajustes</a></li>
-				<li ng-show="home.authenticated"><button
-						ng-click="home.logout()" class="btn btn-primary">
-						Logout (<span ng-bind="home.name"></span>)
-					</button></li>
-			</ul>
+			<a href="#/app/home" class="brand-logo"><i class="large material-icons">insert_chart</i></a>
+			<a href="#/app/home" class="brand-logo center">Software Planner</a>
+			<!--<ul id="nav-mobile" class="right hide-on-med-and-down">
+				 <li><a href="/">Inicio</a></li>
+				<li ng-show="authenticated.status"><a href="/">Ajustes</a></li>
+				<li ng-show="authenticated.status"><button
+						ng-click="logout()" class="btn btn-primary">
+						Logout (<span ng-bind="authenticated.name"></span>)
+					</button></li>   
+			</ul>-->
 		</div>
 	</nav>
 
-	<div class="container" ng-show="!home.authenticated">
-
-		<div style="height: 50%;" class="valign-wrapper  center-align row">
-			<div class="col s6">
-				<span class="valign center-block"><a class="valign"
-				ng-click="home.openLogin()"><button class="btn btn-primary">Iniciar sesión</button></a></span>
-			</div>
-			<div class="col s6">
-			<span class="valign center-block"><a class="btn btn-primary modal-trigger"
-				ng-click="home.openRegister()">Registrarse</a></span>
-			</div>
-		</div>
-
-
-		<div class="row">
-			<div class="col s4">
-				<div class="center promo promo-example">
-					<i class="large material-icons">flash_on</i>
-					<p class="promo-caption">Speeds up development</p>
-					<p class="light center">We did most of the heavy lifting for
-						you to provide a default stylings that incorporate our custom
-						components.</p>
-				</div>
-			</div>
-			<div class="col s4">
-				<div class="center promo promo-example">
-					<i class="large material-icons">group</i>
-					<p class="promo-caption">User Experience Focused</p>
-					<p class="light center">By utilizing elements and principles of
-						Material Design, we were able to create a framework that focuses
-						on User Experience.</p>
-				</div>
-			</div>
-			<div class="col s4">
-				<div class="center promo promo-example">
-					<i class="large material-icons">settings</i>
-					<p class="promo-caption">Easy to work with</p>
-					<p class="light center">We have provided detailed documentation
-						as well as specific code examples to help new users get started.</p>
-				</div>
-			</div>
-		</div>
-
-	</div>
-	
-	  <!-- Modal Structure -->
-  <div id="modalRegister" class="modal modal-fixed-footer">
-    <div class="modal-content">
-      <h4>Register</h4>
-     
-     <div class="row">
-	     <div class="input-field col s12">
-	          <input placeholder="Username" id="register-username" type="text" class="validate">
-	          <label for="username">Username</label>
-	     </div>
-	     
-	     <div class="input-field col s12">
-	          <input placeholder="Password" id="register-password" type="password" class="validate">
-	          <label for="password">Password</label>
-	     </div>
-	     
-	     <div class="input-field col s12">
-	          <input placeholder="Nombre" id="register-name" type="text" class="validate">
-	          <label for="username">Nombre</label>
-	     </div>
-	     
-	     <div class="input-field col s6">
-	     	  <a ng-hide="home.gitHubUserId != null" href="/login/github"><button class="btn" id="gitHub">Iniciar sesión con GitHub</button></a>
-	          <input ng-show="home.gitHubUserId != null" value="{{home.gitHubUserId}}" disabled id="gitHub" type="text" class="validate">  
-	          <label ng-show="home.gitHubUserId != null" for="gitHub">Usuario de GitHub</label>
-	     </div>
-	     
-	     <div class="input-field col s6">
-	     	  <button ng-hide="home.trelloUserId != null" ng-click="home.loginIntoTrello()" class="btn" id="trello">Iniciar sesión con Trello</button>
-	          <input ng-hide="home.trelloUserId == null" value="{{home.trelloUsername}}" disabled id="trello" type="text" class="validate">  
-	          <label ng-hide="home.trelloUserId == null" for="trello">Usuario de trello</label>
-	     </div>
-	     
-     </div>  
-    </div>
-    <div class="modal-footer">
-      <a href="#!" ng-click="home.commitRegister()" class="modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
-    </div>
-  </div> 
-  
-  	  <!-- Modal Structure -->
-  <div id="modalLogin" class="modal modal-fixed-footer">
-    <div class="modal-content">
-      <h4>Iniciar sesión</h4>
-     
-     <div class="row">
-	     <div class="input-field col s12">
-	          <input placeholder="Username" id="login-username" type="text" class="validate">
-	          <label for="username">Username</label>
-	     </div>
-	     
-	     <div class="input-field col s12">
-	          <input placeholder="Password" id="login-password" type="password" class="validate">
-	          <label for="password">Password</label>
-	     </div>
-     </div>  
-    </div>
-    <div class="modal-footer">
-      <a href="#!" ng-click="home.commitLogin()" class="modal-action modal-close waves-effect waves-green btn-flat">Iniciar sesión</a>
-    </div>
-  </div> 
-	
-	<div class="container" ng-show="home.authenticated">
-		
-  
-  <!-- MODALES -->
-  <div id="modalAsociar" class="modal bottom-sheet">
-    <div class="modal-content">
-      <h4>Modal Header</h4>
-	   <input name="id_repo" type="hidden" id="id_repo"/>
-	    <div class="collection">
-	     <a ng-click="home.asociarConTrello()" class="collection-item">Trello</a>
-	     <a href="#!" class="collection-item">Google Calendar</a>
-	    </div>      
-	</div>
-	<div class="modal-footer">
-
-    </div>
-  </div>
-  
- 
-  
-  <!--  SECCIONES -->
-  		<section id="seccion-boards" ng-show="home.estado == 2">
-			<h2>Tus tableros de trello</h2>
-			<ul class="collection" ng-show="home.boards">
-				<li class="collection-item" ng-repeat="(indice, board) in home.boards">
-					<a><i class="tiny material-icons">work</i>{{board.boardName}}</a>
-					<a ng-click="home.asociarBoard(board.id)" class="secondary-content"><i class="material-icons">send</i></a>
-				</li>
-			</ul>
-			
-			<div class="center" ng-show="!home.boards">
-		    <div class="preloader-wrapper big active" >
-		      <div class="spinner-layer spinner-blue">
-		        <div class="circle-clipper left">
-		          <div class="circle"></div>
-		        </div><div class="gap-patch">
-		          <div class="circle"></div>
-		        </div><div class="circle-clipper right">
-		          <div class="circle"></div>
-		        </div>
-		      </div>
-		      </div>
-        	</div>
-		</section>
-  
-		<section id="seccion-repos" ng-show="home.estado == 1">
-			<h2>Tus repositorios</h2>
-			<ul class="collection" ng-show="home.repos">
-				<li class="collection-item" ng-repeat="(indice, repo) in home.repos">
-					<a><i class="tiny material-icons">work</i>{{repo.repoName}}</a>
-					<a ng-click="home.asociarRepo(repo.id)"  ng-show="repo.asoc=='false'" class="secondary-content"><i class="material-icons">send</i></a>
-					<a ng-click="home.verRepo(repo.id)"  ng-show="repo.asoc=='true'" class="secondary-content"><i class="material-icons">work</i></a>
-				</li>
-			</ul>
-			
-			<div class="center" ng-show="!home.repos">
-		    <div class="preloader-wrapper big active" >
-		      <div class="spinner-layer spinner-blue">
-		        <div class="circle-clipper left">
-		          <div class="circle"></div>
-		        </div><div class="gap-patch">
-		          <div class="circle"></div>
-		        </div><div class="circle-clipper right">
-		          <div class="circle"></div>
-		        </div>
-		      </div>
-		      </div>
-        	</div>
-		</section>
-		
-		<section id="seccion-repos" ng-show="home.estado == 3">
-		<div class="row">
-		   <div class="col s4">
-			   <div class="scrollable collection">
-		        <a href="#!" class="collection-item" ng-repeat="task in home.selectedTasks">{{task.name}}</a>
-		      </div>
-		  </div>
-		  <div class="col s8">
-			   <div class="scrollable collection">
-				<a href="#!" class="collection-item" ng-repeat="commit in home.selectedCommits">{{commit.message}}</a>
-		      </div>
-		  </div>
-		</div>
-		<div class="row">
-		   <div class="col s12">
-			   <div class="card scrollable blue-grey darken-1">
-	            <div class="card-content white-text">
-	              <span class="card-title">Card Title</span>
-	              <p>I am a very simple card. I am good at containing small bits of information.
-	              I am convenient because I require little markup to use effectively.</p>
-	            </div>
-          	   </div>
-		  </div>
-		</div>
-		</section>
-		
-
-		
-	</div>
+	<div class="container" ng-view></div>
+	<script type="text/javascript" src="/js/app.js"></script>
+	<script type="text/javascript" src="/js/HomeController.js"></script>
+	<script type="text/javascript" src="/js/LoginController.js"></script>
+	<script type="text/javascript" src="/js/SignUpController.js"></script>
+	<script type="text/javascript" src="/js/PlanController.js"></script>
 </body>
 </html>

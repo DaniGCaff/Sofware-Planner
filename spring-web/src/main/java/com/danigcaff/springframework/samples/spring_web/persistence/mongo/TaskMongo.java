@@ -1,6 +1,8 @@
 package com.danigcaff.springframework.samples.spring_web.persistence.mongo;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import com.danigcaff.springframework.samples.spring_web.persistence.Entity;
 import com.danigcaff.springframework.samples.spring_web.persistence.Task;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager;
 import com.danigcaff.springframework.samples.spring_web.util.MongoManager.COLLECTIONS;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -221,6 +224,26 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 			DBObject doc =cursor.next();
 			Task  board = TaskMongo.parse(doc);
 			tasksList.add(board);
+		}
+		return tasksList;
+	}
+	
+	public static List <Map<String, String>> listCommitsFor(String taskId){
+		List <Map<String, String>> tasksList = new ArrayList<Map<String, String>>();
+		DBObject query = new BasicDBObject(TaskMongo.FIELDS.id.name(), taskId);
+		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.TASKS);
+		DBCursor cursor = coll.find(query);
+		while (cursor.hasNext()){
+			DBObject doc =cursor.next();
+			BasicDBList list = (BasicDBList) doc.get("commits");
+			Iterator<Object> iterador = (Iterator<Object>) list.iterator();
+			while(iterador.hasNext()) {
+				DBObject commit = (BasicDBObject)iterador.next();
+				Map<String, String> aux = new LinkedHashMap<String, String>();
+				aux.put("author", commit.get("author").toString());
+				aux.put("message", commit.get("message").toString());
+				tasksList.add(aux);
+			}
 		}
 		return tasksList;
 	}
