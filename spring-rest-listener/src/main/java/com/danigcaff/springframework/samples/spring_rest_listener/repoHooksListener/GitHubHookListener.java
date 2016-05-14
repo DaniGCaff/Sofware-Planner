@@ -55,6 +55,7 @@ public class GitHubHookListener {
 			Iterator<Map<String, String>> iterador = mapCommitTask.iterator();
 			while (iterador.hasNext()) {
 				Map<String, String> asocCommitTask = iterador.next();
+				String commit = asocCommitTask.get("commit");
 				BasicDBObject query = new BasicDBObject("shortUrl", asocCommitTask.get("urlTask"));
 				DBCollection collTask = database.getCollection("taskPrueba");
 				DBObject docResult = collTask.findOne(query);
@@ -66,12 +67,9 @@ public class GitHubHookListener {
 					}
 					DBCollection collAsociado = database.getCollection("TASKS");
 					DBObject updateDoc = new BasicDBObject();
-					JSONArray arrayCommits = json.getJSONArray("commits");
-					for(int i = 0; i < arrayCommits.length(); i++) {
-						updateDoc.put("$push", new BasicDBObject("commits", (DBObject) (JSON.parse(arrayCommits.get(i).toString()))));
-						DBObject filter = new BasicDBObject("id", idTarjeta);
-						collAsociado.update(filter, updateDoc);
-					}
+					updateDoc.put("$push", new BasicDBObject("commits", (DBObject) (JSON.parse(commit))));
+					DBObject filter = new BasicDBObject("id", idTarjeta);
+					collAsociado.update(filter, updateDoc);
 				} else
 					System.out.println("No hay resultados...");
 			}
@@ -82,19 +80,17 @@ public class GitHubHookListener {
 	private ArrayList<Map<String, String>> getDataFromCommit(JSONObject json) {
 		ArrayList<Map<String, String>> mapUrlIds = new ArrayList<Map<String, String>>();
 		String url;
-		String id;
 		String message;
 		JSONArray commitsArray = (JSONArray) json.get("commits");
 		for (int i = 0; i < commitsArray.length(); i++) {
 			JSONObject rec = commitsArray.getJSONObject(i);
-			id = rec.getString("id");
 			message = rec.getString("message");
 			Pattern pattern = Pattern.compile("@https://trello.com/c/\\w+@");
 			Matcher matcher = pattern.matcher(message);
 			while (matcher.find()) {
 				Map<String, String> map = new HashMap<String, String>();
 				url = matcher.group().substring(1, matcher.group().length() - 1);
-				map.put("idCommit", id);
+				map.put("commit", rec.toString());
 				map.put("urlTask", url);
 				mapUrlIds.add(map);
 			}
