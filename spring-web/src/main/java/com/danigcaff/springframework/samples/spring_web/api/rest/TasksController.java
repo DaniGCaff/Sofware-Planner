@@ -31,7 +31,7 @@ public class TasksController implements TasksApi {
 		return map;
 	}
 	
-	@RequestMapping("/tasks/{boardId}")
+	@RequestMapping("/tasks/board/{boardId}")
 	public List<Map<String,String>> listTasks(@PathVariable("boardId") String boardId){
 		List<Task> listaRepos = TaskMongo.listAll(boardId);
 		List<Map<String, String>> listaIdNombre = new ArrayList<Map<String,String>>();
@@ -56,4 +56,17 @@ public class TasksController implements TasksApi {
 		List<Map<String,String>> listaCommits = TaskMongo.listCommitsFor(taskId);
 		return listaCommits;
     }
+	
+	@RequestMapping("/tasks/{taskId}")
+	public Map<String,String> listATask(@PathVariable("taskId") String taskId){
+		Map<String, String> map = new LinkedHashMap<String,String>();
+		Task aux = new TaskMongo(taskId);
+		map.put(TaskMongo.FIELDS.id.name(), aux.getId());
+		map.put(TaskMongo.FIELDS.idBoard.name(), aux.getIdBoard());
+		map.put(TaskMongo.FIELDS.due.name(), aux.getDue());
+		map.put(TaskMongo.FIELDS.name.name(), aux.getName());
+		map.put(TaskMongo.FIELDS.shortUrl.name(), aux.getShortUrl());
+		map.put(TaskMongo.FIELDS.creation.name(), aux.getCreationDate());
+		return map;
+	}
 }

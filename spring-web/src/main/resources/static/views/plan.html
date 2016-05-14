@@ -6,7 +6,7 @@
   </div>
   <div class="col s8">
 	  <div class="scrollable collection">
-		<span class="collection-item" ng-repeat="commit in selectedCommits">{{commit.message}}</span>
+		<span class="collection-item" ng-repeat="commit in selectedCommits">{{commit.message}} - {{commit.author}}</span>
       </div>
   </div>
 </div>
@@ -14,9 +14,8 @@
    <div class="col s12">
 	   <div class="card scrollable blue-grey darken-1">
            <div class="card-content white-text">
-             <span class="card-title">Card Title</span>
-             <p>I am a very simple card. I am good at containing small bits of information.
-             I am convenient because I require little markup to use effectively.</p>
+             <span class="card-title">{{selectedTitle}}</span>
+             <p>{{selectedMessage}}</p>
            </div>
        </div>
   </div>
