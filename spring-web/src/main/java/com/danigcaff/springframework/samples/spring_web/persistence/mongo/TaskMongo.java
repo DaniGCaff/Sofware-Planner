@@ -1,6 +1,7 @@
 package com.danigcaff.springframework.samples.spring_web.persistence.mongo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,11 +23,12 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 	protected String idBoard;
 	protected String idList;
 	protected String name;
+	protected String desc;
 	protected String pos;
 	protected String due;
 	protected String shortUrl;
 
-	public enum FIELDS {id, creation, lastModification, dateLastActivity, idBoard, idList, name, pos, due, shortUrl}
+	public enum FIELDS {id, desc, creation, lastModification, dateLastActivity, idBoard, idList, name, pos, due, shortUrl}
 
 	protected static DBObject allFields = BasicDBObjectBuilder.start()
 			.add(FIELDS.id.name(), 1).add(FIELDS.creation.name(), 1).add(FIELDS.lastModification.name(), 1)
@@ -93,6 +95,21 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 		this.name = name;
 		return this;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.danigcaff.springframework.samples.spring_web.persistence.mongo.Task#getName()
+	 */
+	public String getDesc() {
+		return desc;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.danigcaff.springframework.samples.spring_web.persistence.mongo.Task#setName(java.lang.String)
+	 */
+	public Task setDesc(String desc) {
+		this.desc = desc;
+		return this;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.danigcaff.springframework.samples.spring_web.persistence.mongo.Task#getPos()
@@ -154,6 +171,7 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 						.add(FIELDS.idBoard.name(), idBoard)
 						.add(FIELDS.idList.name(), idList)
 						.add(FIELDS.name.name(), name)
+						.add(FIELDS.desc.name(), desc)
 						.add(FIELDS.pos.name(), pos)
 						.add(FIELDS.due.name(), due)
 						.add(FIELDS.shortUrl.name(), shortUrl)
@@ -166,7 +184,7 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 	public Entity readById() {
 		DBObject filter = BasicDBObjectBuilder.start().add(FIELDS.id.name(), id).get();
 		DBCollection coll = MongoManager.getManager().getCollection(MongoManager.COLLECTIONS.TASKS);
-		DBObject result = coll.findOne(filter, allFields);
+		DBObject result = coll.findOne(filter);
 		if(result != null) {
 			this.creation = (String) result.get(FIELDS.creation.name());
 			this.lastModification = (String) result.get(FIELDS.lastModification.name());
@@ -174,6 +192,7 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 			this.idBoard = (String) result.get(FIELDS.idBoard.name());
 			this.idList = (String) result.get(FIELDS.idList.name());
 			this.name = (String) result.get(FIELDS.name.name());
+			this.desc = (String) result.get(FIELDS.desc.name());
 			this.pos = (String) result.get(FIELDS.pos.name());
 			this.due = (String) result.get(FIELDS.due.name());
 			this.shortUrl = (String) result.get(FIELDS.shortUrl.name());
@@ -191,6 +210,7 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 		task.setIdBoard((String)object.get(FIELDS.idBoard.name()));
 		task.setIdList((String)object.get(FIELDS.idList.name()));
 		task.setName((String)object.get(FIELDS.name.name()));
+		task.setDesc((String)object.get(FIELDS.desc.name()));
 		task.setPos((String)object.get(FIELDS.pos.name()));
 		task.setDue((String)object.get(FIELDS.due.name()));
 		task.setShortUrl((String)object.get(FIELDS.shortUrl.name()));
@@ -201,12 +221,13 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 	public static void insert(Map<String, String> data) {
 		DBObject doc = BasicDBObjectBuilder.start()
 				.add(FIELDS.id.name(), data.get(FIELDS.id.name()))
-				.add(FIELDS.creation.name(), data.get(FIELDS.creation.name()))
-				.add(FIELDS.lastModification.name(), data.get(FIELDS.lastModification.name()))
+				.add(FIELDS.creation.name(), new Date().toString())
+				.add(FIELDS.lastModification.name(), new Date().toString())
 				.add(FIELDS.dateLastActivity.name(), data.get(FIELDS.dateLastActivity.name()))
 				.add(FIELDS.idBoard.name(), data.get(FIELDS.idBoard.name()))
 				.add(FIELDS.idList.name(), data.get(FIELDS.idList.name()))
 				.add(FIELDS.name.name(), data.get(FIELDS.name.name()))
+				.add(FIELDS.desc.name(), data.get(FIELDS.desc.name()))
 				.add(FIELDS.pos.name(), data.get(FIELDS.pos.name()))
 				.add(FIELDS.due.name(), data.get(FIELDS.due.name()))
 				.add(FIELDS.shortUrl.name(), data.get(FIELDS.shortUrl.name()))
@@ -236,13 +257,15 @@ public class TaskMongo extends EntityAbstractMongo implements Task {
 		while (cursor.hasNext()){
 			DBObject doc =cursor.next();
 			BasicDBList list = (BasicDBList) doc.get("commits");
-			Iterator<Object> iterador = (Iterator<Object>) list.iterator();
-			while(iterador.hasNext()) {
-				DBObject commit = (BasicDBObject)iterador.next();
-				Map<String, String> aux = new LinkedHashMap<String, String>();
-				aux.put("author", commit.get("author").toString());
-				aux.put("message", commit.get("message").toString());
-				tasksList.add(aux);
+			if(list != null) {
+				Iterator<Object> iterador = (Iterator<Object>) list.iterator();
+				while(iterador.hasNext()) {
+					DBObject commit = (BasicDBObject)iterador.next();
+					Map<String, String> aux = new LinkedHashMap<String, String>();
+					aux.put("author", commit.get("author").toString());
+					aux.put("message", commit.get("message").toString());
+					tasksList.add(aux);
+				}
 			}
 		}
 		return tasksList;

@@ -44,6 +44,7 @@ public class TasksController implements TasksApi {
 			map.put(TaskMongo.FIELDS.idBoard.name(), aux.getIdBoard());
 			map.put(TaskMongo.FIELDS.due.name(), aux.getDue());
 			map.put(TaskMongo.FIELDS.name.name(), aux.getName());
+			map.put(TaskMongo.FIELDS.desc.name(), aux.getDesc());
 			map.put(TaskMongo.FIELDS.shortUrl.name(), aux.getShortUrl());
 			map.put(TaskMongo.FIELDS.creation.name(), aux.getCreationDate());
 			listaIdNombre.add(map);
@@ -65,6 +66,7 @@ public class TasksController implements TasksApi {
 		map.put(TaskMongo.FIELDS.idBoard.name(), aux.getIdBoard());
 		map.put(TaskMongo.FIELDS.due.name(), aux.getDue());
 		map.put(TaskMongo.FIELDS.name.name(), aux.getName());
+		map.put(TaskMongo.FIELDS.desc.name(), aux.getDesc());
 		map.put(TaskMongo.FIELDS.shortUrl.name(), aux.getShortUrl());
 		map.put(TaskMongo.FIELDS.creation.name(), aux.getCreationDate());
 		return map;

@@ -36,7 +36,12 @@ softwarePlannerApp.config(['$routeProvider', '$httpProvider',
 
 softwarePlannerApp.factory('AppAuth', function() {
 	var authenticated = {status: false, name: "", gitHubUserId: "", trelloUserId: "", id: "", repos: [], boards:[], tasks:[]};
+	
+	authenticated.logout = function() {
+		authenticated = {status: false, name: "", gitHubUserId: "", trelloUserId: "", id: "", repos: [], boards:[], tasks:[]};
+	}
+	
 	return authenticated;
 });
 
-angular.module('appControllers', []);
+angular.module('appControllers', ['ngSanitize']);

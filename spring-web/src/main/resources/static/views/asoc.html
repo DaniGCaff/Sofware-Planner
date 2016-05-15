@@ -1,0 +1,7 @@
+<h2>Tus tableros de trello</h2>
+<ul class="collection" ng-show="AppAuth.boards">
+	<li class="collection-item" ng-repeat="board in AppAuth.boards">
+		<a><i class="tiny material-icons">work</i>{{board.boardName}}</a>
+		<a ng-click="asociar(board.id)" class="secondary-content"><i class="material-icons">send</i></a>
+	</li>
+</ul>

@@ -23,7 +23,7 @@ angular.module('appControllers').controller('PlanController', function($http, $l
 		$scope.selectedTaskId = taskId;
 		$http.get("/tasks/" + taskId).success(function(task) {
 			$scope.selectedTitle = task.name;
-			$scope.selectedMessage = "Ver más en trello: " + task.shortUrl;
+			$scope.selectedMessage = task.desc + "<br/><br/><a href='" + task.shortUrl + "'> Ver más en trello</a>";
 		}).error(function() {
 			alert("ERROR");
 		});

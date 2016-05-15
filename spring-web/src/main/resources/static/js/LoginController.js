@@ -14,6 +14,11 @@ angular.module('appControllers').controller('LoginController', function($http, $
 				}).error(function() {
 					AppAuth.repos = null;
 				});
+				$http.get("/boards/"+AppAuth.id).success(function(dato) {
+					AppAuth.boards = dato;
+				}).error(function() {
+					AppAuth.boards = null;
+				});
 				$location.path("#/app/home");
 			} else {
 				alert(resp.data.response);

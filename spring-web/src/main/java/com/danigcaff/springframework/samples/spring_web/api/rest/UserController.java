@@ -79,7 +79,7 @@ public class UserController implements UserApi {
 				Map<String, String> mapBoards = new LinkedHashMap<String, String>();
 				mapBoards.put(BoardMongo.FIELDS.id.name(), boardsArray.getJSONObject(i).get("id").toString());
 				mapBoards.put(BoardMongo.FIELDS.boardName.name(), boardsArray.getJSONObject(i).get("name").toString());
-				mapBoards.put(BoardMongo.FIELDS.owner.name(), json.getJSONObject("user").get(UserMongo.FIELDS.trelloUserId.name()).toString());
+				mapBoards.put(BoardMongo.FIELDS.owner.name(), json.getJSONObject("user").get(UserMongo.FIELDS.id.name()).toString());
 				BoardMongo.insert(mapBoards);
 			}
 			
@@ -87,12 +87,11 @@ public class UserController implements UserApi {
 			for (int i = 0; i < tasksArray.length(); i++) {
 				Map<String, String> mapTasks = new LinkedHashMap<String, String>();
 				mapTasks.put(TaskMongo.FIELDS.id.name(), tasksArray.getJSONObject(i).get("id").toString());
-				mapTasks.put(TaskMongo.FIELDS.creation.name(), tasksArray.getJSONObject(i).get("creation").toString());
-				mapTasks.put(TaskMongo.FIELDS.lastModification.name(), tasksArray.getJSONObject(i).get("lastModification").toString());
 				mapTasks.put(TaskMongo.FIELDS.dateLastActivity.name(), tasksArray.getJSONObject(i).get("dateLastActivity").toString());
 				mapTasks.put(TaskMongo.FIELDS.idBoard.name(), tasksArray.getJSONObject(i).get("idBoard").toString());
 				mapTasks.put(TaskMongo.FIELDS.idList.name(), tasksArray.getJSONObject(i).get("idList").toString());
 				mapTasks.put(TaskMongo.FIELDS.name.name(), tasksArray.getJSONObject(i).get("name").toString());
+				mapTasks.put(TaskMongo.FIELDS.desc.name(), tasksArray.getJSONObject(i).get("desc").toString());
 				mapTasks.put(TaskMongo.FIELDS.pos.name(), tasksArray.getJSONObject(i).get("pos").toString());
 				mapTasks.put(TaskMongo.FIELDS.due.name(), tasksArray.getJSONObject(i).get("due").toString());
 				mapTasks.put(TaskMongo.FIELDS.shortUrl.name(), tasksArray.getJSONObject(i).get("shortUrl").toString());

@@ -19,6 +19,10 @@ public interface Task extends Entity{
 	String getName();
 
 	Task setName(String name);
+	
+	String getDesc();
+
+	Task setDesc(String desc);
 
 	String getPos();
 

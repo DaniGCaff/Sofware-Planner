@@ -31,8 +31,8 @@ angular.module('appControllers').controller('SignUpController', function($http, 
 	        	for(var i = 0; i < self.boards.length; i++) {
 	    			var board = self.boards[i];
 	        		Trello.get("boards/"+board.id+"/cards", function(boardTasks) {
-	        			for(var j = 0; j < boardTasks; j++) {
-	        				self.tasks.push(boardTasks[i]);
+	        			for(var j = 0; j < boardTasks.length; j++) {
+	        				self.tasks.push(boardTasks[j]);
 	        			}
 	        		},function() {
 	        			console.log("Failed to load tasks.");
