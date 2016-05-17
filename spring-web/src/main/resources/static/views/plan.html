@@ -5,9 +5,9 @@
       </div>
   </div>
   <div class="col s8">
-	  <div class="scrollable collection">
-		<span class="collection-item" ng-repeat="commit in selectedCommits">{{commit.message}} - {{commit.author}}</span>
-      </div>
+	  <ul class="scrollable collection">
+		<li class="collection-item" ng-repeat="commit in selectedCommits" ng-init="autor=(commit.author)"><b>Contenido del commit:</b> {{commit.message}} <br/> <b>Datos del autor:</b> {{autor}}</span>
+      </ul>
   </div>
 </div>
 <div class="row">

@@ -55,9 +55,9 @@ public class GitHubHookListener {
 			Iterator<Map<String, String>> iterador = mapCommitTask.iterator();
 			while (iterador.hasNext()) {
 				Map<String, String> asocCommitTask = iterador.next();
-				String commit = asocCommitTask.get("commit");
+				String commit =  (String)new JSONObject((String)asocCommitTask.get("commit")).get("message");
 				BasicDBObject query = new BasicDBObject("shortUrl", asocCommitTask.get("urlTask"));
-				DBCollection collTask = database.getCollection("taskPrueba");
+				DBCollection collTask = database.getCollection("TASKS");
 				DBObject docResult = collTask.findOne(query);
 				if (docResult != null) {
 					String idTarjeta = docResult.get("id").toString();
@@ -67,7 +67,7 @@ public class GitHubHookListener {
 					}
 					DBCollection collAsociado = database.getCollection("TASKS");
 					DBObject updateDoc = new BasicDBObject();
-					updateDoc.put("$push", new BasicDBObject("commits", (DBObject) (JSON.parse(commit))));
+					updateDoc.put("$push", new BasicDBObject("commits", (DBObject) (JSON.parse(asocCommitTask.get("commit")))));
 					DBObject filter = new BasicDBObject("id", idTarjeta);
 					collAsociado.update(filter, updateDoc);
 				} else
