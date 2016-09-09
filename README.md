@@ -1,6 +1,6 @@
 # Spring-samples
 
-Well this is a repository originally planned to be my spring samples repository. However, in a last-year course, we will asked to deploy a java app, so I used this as final delivery. 
+Well this is a repository originally planned to be my spring samples repository. However, in a last-year course, we were asked to deploy a java app, so I used this as final delivery. 
 
 It is a "Sofware Planner" app that consist of a mashup of two APIs: Github and Trello. Main idea is to plann in Trello, and then assign goals to your team, then each programmer should commit with a specific string in the commit description.
 
